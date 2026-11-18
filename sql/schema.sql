@@ -1,15 +1,17 @@
 -- =====================================================================
--- Tech ABC Corp - HR Database  |  schema.sql (DDL)   PostgreSQL 13+
--- Run order: schema.sql -> etl_from_proj_stg.sql -> crud_queries.sql
--- Re-runnable: drops the HR tables first (proj_stg staging table is NOT touched).
+-- Tech ABC Corp - HR Database  |  schema.sql (DDL)   PostgreSQL 15+
+-- Run order: schema.sql -> etl_from_proj_stg.sql -> optional/*.sql -> crud_queries.sql  (or just run_all.sql)
+-- NON-DESTRUCTIVE: this script only creates objects. If the HR tables already exist it stops with an
+-- error instead of dropping anything. To rebuild a disposable database use reset_dev.sql (explicit confirmation).
+-- The staging table proj_stg is never touched here.
 -- =====================================================================
-DROP TABLE IF EXISTS employee_salary  CASCADE;
-DROP TABLE IF EXISTS job_assignment   CASCADE;
-DROP TABLE IF EXISTS employee         CASCADE;
-DROP TABLE IF EXISTS education_level  CASCADE;
-DROP TABLE IF EXISTS location         CASCADE;
-DROP TABLE IF EXISTS department       CASCADE;
-DROP TABLE IF EXISTS job              CASCADE;
+DO $$
+BEGIN
+    IF to_regclass('public.employee') IS NOT NULL OR to_regclass('public.job_assignment') IS NOT NULL
+       OR to_regclass('public.employee_salary') IS NOT NULL THEN
+        RAISE EXCEPTION 'HR tables already exist in database "%": schema.sql will not drop them. Use a new database, or sql/reset_dev.sql for a disposable one.', current_database();
+    END IF;
+END $$;
 
 -- ---------- Lookup tables ----------
 CREATE TABLE location (
@@ -89,7 +91,7 @@ CREATE TABLE job_assignment (
 CREATE UNIQUE INDEX uq_assignment_one_current
     ON job_assignment (employee_id) WHERE end_date IS NULL;
 
--- ---------- RESTRICTED: salary (table-level security applied in security_roles.sql) ----------
+-- ---------- RESTRICTED: salary (table-level security applied in optional/03_salary_security.sql) ----------
 CREATE TABLE employee_salary (
     salary_id     INTEGER GENERATED ALWAYS AS IDENTITY,
     assignment_id INTEGER       NOT NULL,
