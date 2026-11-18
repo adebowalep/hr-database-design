@@ -1,7 +1,9 @@
 -- =====================================================================
 -- Tech ABC Corp - HR Database  |  etl_from_proj_stg.sql
 -- Loads the normalized tables from the staging table proj_stg
--- (created by StageTableLoad.sql / INIT DATABASE button). Run AFTER schema.sql.
+-- (synthetic: data/synthetic/synthetic_proj_stg.sql; course data: StageTableLoad.sql). Run AFTER schema.sql.
+-- Atomic: one transaction. Any failed check (preflight or reconciliation) rolls everything back, so the
+-- target tables are either completely loaded or still empty.
 -- Cleaning rules:
 --   * names/titles trimmed and internal double spaces collapsed ('Eric  Baxter' -> 'Eric Baxter')
 --   * 'Minnapolis' spelling corrected to 'Minneapolis'
@@ -22,6 +24,10 @@ BEGIN
     END IF;
 END $$;
 
+-- 0. Data-quality gate: fails with a specific SQLSTATE (EL001..EL015) instead of guessing
+\ir etl_preflight.sql
+DO $$ BEGIN PERFORM etl_check_staging('public.proj_stg'); END $$;
+
 -- 1. Lookup tables
 INSERT INTO location (location_name, street_address, city, state_code)
 SELECT DISTINCT trim(location), trim(address),
@@ -38,7 +44,9 @@ SELECT DISTINCT trim(job_title) FROM proj_stg ORDER BY 1;
 INSERT INTO education_level (education_level_name)
 SELECT DISTINCT trim(education_lvl) FROM proj_stg ORDER BY 1;
 
--- 2. Employees: one row per distinct Emp_ID
+-- 2. Employees: one row per distinct Emp_ID.
+--    min() is safe here ONLY because etl_check_staging proved name, email, location and education are identical
+--    across an employee's rows. hire_dt/start_dt are the documented exception (see header).
 INSERT INTO employee (employee_number, full_name, email, hire_date, location_id, education_level_id)
 SELECT s.emp_id,
        regexp_replace(trim(s.emp_nm), '\s+', ' ', 'g'),
