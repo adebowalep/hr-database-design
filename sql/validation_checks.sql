@@ -1,6 +1,6 @@
 -- DIAGNOSTIC REPORT for the original course dataset (this produced docs/validation_results.md).
 -- It prints actual vs expected but does NOT fail automatically. The automated, failing-on-error checks
--- are in tests/ (run tests/run_tests.sql). Several figures below (Toni Lembeck, 2100 dates, 1 President) are
+-- are in tests/ (run tests/run_tests.sql). Several figures below (6 employees with history, 2100 dates, 1 President) are
 -- specific to the course data, so this report is not meaningful on the synthetic dataset.
 -- Run after run_all.sql. Expected result is shown in the 'expected' column.
 \pset pager off
@@ -8,7 +8,7 @@ SELECT 'staging rows = job_assignment rows' AS check_name, (SELECT count(*) FROM
 UNION ALL SELECT 'distinct Emp_ID = employee rows', (SELECT count(DISTINCT emp_id) FROM proj_stg), (SELECT count(*) FROM employee)
 UNION ALL SELECT 'salary rows = staging rows', (SELECT count(*) FROM employee_salary), (SELECT count(*) FROM proj_stg)
 UNION ALL SELECT 'salary total matches staging total', (SELECT sum(salary_amount)::int FROM employee_salary), (SELECT sum(salary) FROM proj_stg)
-UNION ALL SELECT 'Toni Lembeck job records', (SELECT count(*) FROM job_assignment a JOIN employee e USING (employee_id) WHERE e.full_name='Toni Lembeck'), 2
+UNION ALL SELECT 'employees with 2 job records (history preserved)', (SELECT count(*) FROM (SELECT employee_id FROM job_assignment GROUP BY 1 HAVING count(*)=2) t), 6
 UNION ALL SELECT 'employees with exactly one current job', (SELECT count(*) FROM (SELECT employee_id FROM job_assignment WHERE end_date IS NULL GROUP BY 1 HAVING count(*)=1) t), (SELECT count(*) FROM employee)
 UNION ALL SELECT 'employees with 2+ current jobs', (SELECT count(*) FROM (SELECT employee_id FROM job_assignment WHERE end_date IS NULL GROUP BY 1 HAVING count(*)>1) t), 0
 UNION ALL SELECT 'orphan assignments (no employee/job/dept)', (SELECT count(*) FROM job_assignment a WHERE NOT EXISTS (SELECT 1 FROM employee e WHERE e.employee_id=a.employee_id) OR NOT EXISTS (SELECT 1 FROM job j WHERE j.job_id=a.job_id) OR NOT EXISTS (SELECT 1 FROM department d WHERE d.department_id=a.department_id)), 0

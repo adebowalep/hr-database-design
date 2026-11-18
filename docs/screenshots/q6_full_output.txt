@@ -1,4 +1,7 @@
--- Question 6: Current and past jobs of Toni Lembeck
+-- psql -v q6_employee='Marlow Finch'
+-- Question 6: Current and past jobs of one employee who has changed jobs.
+-- The course question names a specific employee from the course dataset (not published here). The default below is the
+-- synthetic employee with a job change; run with  psql -v q6_employee='Full Name' ...  to ask about someone else.
 SELECT e.full_name  AS employee_name,
        j.job_title,
        d.department_name,
@@ -10,11 +13,10 @@ JOIN job_assignment a ON a.employee_id   = e.employee_id
 JOIN job            j ON j.job_id        = a.job_id
 JOIN department     d ON d.department_id = a.department_id
 LEFT JOIN employee  m ON m.employee_id   = a.manager_id
-WHERE e.full_name = 'Toni Lembeck'
+WHERE e.full_name = :'q6_employee'
 ORDER BY a.start_date;
- employee_name |       job_title        | department_name | manager_name | job_start_date | job_end_date 
----------------+------------------------+-----------------+--------------+----------------+--------------
- Toni Lembeck  | Network Engineer       | IT              | Jacob Lauber | 1995-03-12     | 2001-07-18
- Toni Lembeck  | Database Administrator | IT              | Jacob Lauber | 2001-07-18     | Current
+ employee_name |     job_title     | department_name | manager_name | job_start_date | job_end_date 
+---------------+-------------------+-----------------+--------------+----------------+--------------
+ Marlow Finch  | Software Engineer | Engineering     | Rowan Pike   | 2018-03-01     | 2021-06-30
+ Marlow Finch  | Data Engineer     | Engineering     | Rowan Pike   | 2021-07-01     | Current
 (2 rows)
-

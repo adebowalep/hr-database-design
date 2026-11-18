@@ -18,12 +18,11 @@ CALL pg_temp.assert_sql('original', 'jobs / departments / locations / education 
     $$ SELECT (SELECT count(*) FROM job) || '/' || (SELECT count(*) FROM department) || '/' || (SELECT count(*) FROM location) || '/' || (SELECT count(*) FROM education_level) $$, '10/5/5/7');
 CALL pg_temp.assert_sql('original', '6 employees have job history',
     'SELECT count(*) FROM (SELECT 1 FROM job_assignment GROUP BY employee_id HAVING count(*) > 1) t', '6');
-CALL pg_temp.assert_sql('original', 'employees with history are the 6 documented people',
-    $$ SELECT string_agg(e.full_name, ', ' ORDER BY e.full_name) FROM employee e WHERE (SELECT count(*) FROM job_assignment a WHERE a.employee_id = e.employee_id) > 1 $$,
-    'Abby Lockhart, Edward Eslser, Eric Baxter, Lori Scatchard, Melinda Fisher, Toni Lembeck');
-CALL pg_temp.assert_sql('original', 'Toni Lembeck: 2 records, Network Engineer then Database Administrator (current)',
+CALL pg_temp.assert_sql('original', 'each of the 6 employees with history has exactly 2 records',
+    'SELECT count(*) FROM (SELECT 1 FROM job_assignment GROUP BY employee_id HAVING count(*) = 2) t', '6');
+CALL pg_temp.assert_sql('original', 'employee E27498: 2 records, Network Engineer then Database Administrator (current)',
     $$ SELECT string_agg(j.job_title || CASE WHEN a.end_date IS NULL THEN ' (current)' ELSE '' END, ' > ' ORDER BY a.start_date)
-         FROM employee e JOIN job_assignment a USING (employee_id) JOIN job j USING (job_id) WHERE e.full_name = 'Toni Lembeck' $$,
+         FROM employee e JOIN job_assignment a USING (employee_id) JOIN job j USING (job_id) WHERE e.employee_number = 'E27498' $$,
     'Network Engineer > Database Administrator (current)');
 CALL pg_temp.assert_sql('original', 'exactly one assignment has no manager (the President)',
     'SELECT count(*) FROM job_assignment WHERE manager_id IS NULL', '1');

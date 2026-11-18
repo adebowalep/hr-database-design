@@ -1,0 +1,15 @@
+BEGIN;
+CALL sp_employee_job_history('Marlow Finch', 'job_history');
+  p_result   
+-------------
+ job_history
+(1 row)
+
+FETCH ALL FROM job_history;
+ employee_name |     job_title     | department_name | manager_name | job_start_date | job_end_date 
+---------------+-------------------+-----------------+--------------+----------------+--------------
+ Marlow Finch  | Software Engineer | Engineering     | Rowan Pike   | 2018-03-01     | 2021-06-30
+ Marlow Finch  | Data Engineer     | Engineering     | Rowan Pike   | 2021-07-01     | 
+(2 rows)
+
+COMMIT;

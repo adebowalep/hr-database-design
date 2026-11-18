@@ -23,6 +23,6 @@ $$;
 
 -- Usage (cursor must be fetched inside the same transaction):
 -- BEGIN;
--- CALL sp_employee_job_history('Toni Lembeck', 'job_history');
+-- CALL sp_employee_job_history('Marlow Finch', 'job_history');
 -- FETCH ALL FROM job_history;
 -- COMMIT;

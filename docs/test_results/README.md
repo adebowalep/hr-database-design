@@ -8,7 +8,7 @@ The two datasets are different and must not be confused:
 | **Synthetic** (fictional, in this repo) | 11 / 9 | 183 | 0 | 3 | [synthetic_dataset_pg17.txt](synthetic_dataset_pg17.txt) |
 | **Original course dataset** (local only, not in this repo) | 205 / 199 | 181 | 0 | 3 | [original_dataset_pg17.txt](original_dataset_pg17.txt) |
 
-The counts differ because dataset-specific expectations (`50_dataset_expectations.sql`) differ: 14 synthetic vs 12 original.
+The two output files were regenerated on 2026-11-18 after the course employee names were removed from the dataset-specific assertions (the assertion count is unchanged); they contain no course employee names. The counts differ because dataset-specific expectations (`50_dataset_expectations.sql`) differ: 14 synthetic vs 12 original.
 INFO rows are informational and never count as PASS or FAIL.
 
 Other checks run locally (PostgreSQL 17.11 (Homebrew)):

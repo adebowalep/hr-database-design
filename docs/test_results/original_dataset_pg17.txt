@@ -168,18 +168,18 @@ psql:tests/25_etl_preflight.sql:53: NOTICE:  table "_stg_norm" does not exist, s
  148 | PASS   | constraints    | salary beyond NUMERIC(10,2) rejected                                                                | role=postgres expected SQLSTATE 22003, got 22003
  149 | PASS   | constraints    | valid closed historical assignment is accepted                                                      | role=postgres, rows=1 (min 1)
  150 | PASS   | constraints    | row counts unchanged after all constraint tests                                                     | actual=0 expected=0
- 151 | PASS   | erd            | physical ERD columns and types match table department                                               | actual=department_id integer, department_name character varying(50)
- 152 | PASS   | erd            | physical ERD columns and types match table education_level                                          | actual=education_level_id integer, education_level_name character varying(50)
- 153 | PASS   | erd            | physical ERD columns and types match table employee                                                 | actual=employee_id integer, employee_number character varying(8), full_name character varying(100), email character varying(100), hire_date date, location_id integer, education_level_id integer
- 154 | PASS   | erd            | physical ERD columns and types match table employee_salary                                          | actual=salary_id integer, assignment_id integer, salary_amount numeric(10,2)
- 155 | PASS   | erd            | physical ERD columns and types match table job                                                      | actual=job_id integer, job_title character varying(100)
- 156 | PASS   | erd            | physical ERD columns and types match table job_assignment                                           | actual=assignment_id integer, employee_id integer, job_id integer, department_id integer, manager_id integer, start_date date, end_date date
- 157 | PASS   | erd            | physical ERD columns and types match table location                                                 | actual=location_id integer, location_name character varying(50), street_address character varying(100), city character varying(50), state_code character(2)
- 158 | PASS   | erd            | physical ERD has exactly these 7 tables in public                                                   | actual=department,education_level,employee,employee_salary,job,job_assignment,location expected=department,education_level,employee,employee_salary,job,job_assignment,location
- 159 | PASS   | erd            | primary keys match the ERD                                                                          | actual=department(department_id) education_level(education_level_id) employee(employee_id) employee_salary(salary_id) job(job_id) job_assignment(assignment_id) location(location_id) expected=department(department_id) education_level(education_level_id) employee(employee_id) employee_salary(salary_id) job(job_id) job_assignment(assignment_id) location(location_id)
- 160 | PASS   | erd            | foreign keys (child.column -> parent) match the ERD                                                 | actual=employee.education_level_id->education_level employee.location_id->location employee_salary.assignment_id->job_assignment job_assignment.department_id->department job_assignment.employee_id->employee job_assignment.job_id->job job_assignment.manager_id->employee expected=employee.education_level_id->education_level employee.location_id->location employee_salary.assignment_id->job_assignment job_assignment.department_id->department job_assignment.employee_id->employee job_assignment.job_id->job job_assignment.manager_id->employee
- 161 | PASS   | erd            | all foreign keys are ON DELETE RESTRICT (confdeltype = r)                                           | actual=0 expected=0
- 162 | PASS   | erd            | salary FK is unique (1:0..1 with job_assignment, as drawn)                                          | actual=1 expected=1
+ 151 | PASS   | schema-spec    | columns and types match the expected specification: department                                      | actual=department_id integer, department_name character varying(50)
+ 152 | PASS   | schema-spec    | columns and types match the expected specification: education_level                                 | actual=education_level_id integer, education_level_name character varying(50)
+ 153 | PASS   | schema-spec    | columns and types match the expected specification: employee                                        | actual=employee_id integer, employee_number character varying(8), full_name character varying(100), email character varying(100), hire_date date, location_id integer, education_level_id integer
+ 154 | PASS   | schema-spec    | columns and types match the expected specification: employee_salary                                 | actual=salary_id integer, assignment_id integer, salary_amount numeric(10,2)
+ 155 | PASS   | schema-spec    | columns and types match the expected specification: job                                             | actual=job_id integer, job_title character varying(100)
+ 156 | PASS   | schema-spec    | columns and types match the expected specification: job_assignment                                  | actual=assignment_id integer, employee_id integer, job_id integer, department_id integer, manager_id integer, start_date date, end_date date
+ 157 | PASS   | schema-spec    | columns and types match the expected specification: location                                        | actual=location_id integer, location_name character varying(50), street_address character varying(100), city character varying(50), state_code character(2)
+ 158 | PASS   | schema-spec    | exactly the 7 expected tables exist in public                                                       | actual=department,education_level,employee,employee_salary,job,job_assignment,location expected=department,education_level,employee,employee_salary,job,job_assignment,location
+ 159 | PASS   | schema-spec    | primary keys match the expected specification                                                       | actual=department(department_id) education_level(education_level_id) employee(employee_id) employee_salary(salary_id) job(job_id) job_assignment(assignment_id) location(location_id) expected=department(department_id) education_level(education_level_id) employee(employee_id) employee_salary(salary_id) job(job_id) job_assignment(assignment_id) location(location_id)
+ 160 | PASS   | schema-spec    | foreign keys (child.column -> parent) match the expected specification                              | actual=employee.education_level_id->education_level employee.location_id->location employee_salary.assignment_id->job_assignment job_assignment.department_id->department job_assignment.employee_id->employee job_assignment.job_id->job job_assignment.manager_id->employee expected=employee.education_level_id->education_level employee.location_id->location employee_salary.assignment_id->job_assignment job_assignment.department_id->department job_assignment.employee_id->employee job_assignment.job_id->job job_assignment.manager_id->employee
+ 161 | PASS   | schema-spec    | all foreign keys are ON DELETE RESTRICT (confdeltype = r)                                           | actual=0 expected=0
+ 162 | PASS   | schema-spec    | salary FK is unique (1:0..1 with job_assignment)                                                    | actual=1 expected=1
  163 | PASS   | queries        | Q1 current-job listing returns one row per employee                                                 | actual=199 expected=199
  164 | PASS   | queries        | Q2-Q4 insert / update / delete of a job title restores the original job table                       | role=postgres, rows=0 (min 0)
  165 | PASS   | queries        | Q5 department headcounts add up to the number of employees                                          | actual=199 expected=199
@@ -197,8 +197,8 @@ psql:tests/25_etl_preflight.sql:53: NOTICE:  table "_stg_norm" does not exist, s
  177 | PASS   | original       | salary total = 22,060,329                                                                           | actual=22060329 expected=22060329
  178 | PASS   | original       | jobs / departments / locations / education levels = 10 / 5 / 5 / 7                                  | actual=10/5/5/7 expected=10/5/5/7
  179 | PASS   | original       | 6 employees have job history                                                                        | actual=6 expected=6
- 180 | PASS   | original       | employees with history are the 6 documented people                                                  | actual=Abby Lockhart, Edward Eslser, Eric Baxter, Lori Scatchard, Melinda Fisher, Toni Lembeck expected=Abby Lockhart, Edward Eslser, Eric Baxter, Lori Scatchard, Melinda Fisher, Toni Lembeck
- 181 | PASS   | original       | Toni Lembeck: 2 records, Network Engineer then Database Administrator (current)                     | actual=Network Engineer > Database Administrator (current) expected=Network Engineer > Database Administrator (current)
+ 180 | PASS   | original       | each of the 6 employees with history has exactly 2 records                                          | actual=6 expected=6
+ 181 | PASS   | original       | employee E27498: 2 records, Network Engineer then Database Administrator (current)                  | actual=Network Engineer > Database Administrator (current) expected=Network Engineer > Database Administrator (current)
  182 | PASS   | original       | exactly one assignment has no manager (the President)                                               | actual=1 expected=1
  183 | PASS   | original       | 199 placeholder 2100 end dates became current assignments                                           | actual=199 expected=199
  184 | PASS   | original       | salary range 26,050 - 540,000                                                                       | actual=26050-540000 expected=26050-540000
@@ -211,7 +211,6 @@ psql:tests/25_etl_preflight.sql:53: NOTICE:  table "_stg_norm" does not exist, s
  data           |      0 |      0 |    1
  dataset        |      0 |      0 |    1
  dates          |      4 |      0 |    0
- erd            |     12 |      0 |    0
  etl-preflight  |     16 |      0 |    0
  hierarchy      |      5 |      0 |    0
  history        |      5 |      0 |    0
@@ -222,6 +221,7 @@ psql:tests/25_etl_preflight.sql:53: NOTICE:  table "_stg_norm" does not exist, s
  quality        |      8 |      0 |    0
  queries        |      3 |      0 |    0
  reconciliation |      9 |      0 |    0
+ schema-spec    |     12 |      0 |    0
  security       |     54 |      0 |    1
  views          |      4 |      0 |    0
 (17 rows)

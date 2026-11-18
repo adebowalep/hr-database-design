@@ -5,7 +5,7 @@
 -- Atomic: one transaction. Any failed check (preflight or reconciliation) rolls everything back, so the
 -- target tables are either completely loaded or still empty.
 -- Cleaning rules:
---   * names/titles trimmed and internal double spaces collapsed ('Eric  Baxter' -> 'Eric Baxter')
+--   * names/titles trimmed and internal double spaces collapsed ('Cedar  Wynn' -> 'Cedar Wynn')
 --   * 'Minnapolis' spelling corrected to 'Minneapolis'
 --   * end_dt in year 2100 is a placeholder for "current job" -> stored as NULL
 --   * manager text 'None' (the President) -> NULL manager_id; other managers resolved by name to employee

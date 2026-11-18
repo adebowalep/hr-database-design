@@ -1,5 +1,7 @@
 # Validation Results - Tech ABC Corp HR Database (original course dataset)
 
+> **Redaction note (2026-11-18):** this is the original course-dataset result. Employee names were removed from this public copy (two places, marked "omitted"); all counts, totals and other figures are unchanged. The unredacted file is kept privately, not in this repository.
+>
 > **Historical record.** These results were produced before the later hardening work. Section 3 (salary security) used the original grant script, which let the read-only role read `proj_stg`; see [security/README.md](security/README.md). Current automated results are in [test_results/](test_results/README.md). Paths such as `erd/` are now `docs/erd/`, and `validation_checks.sql` is now `sql/validation_checks.sql`.
 
 Everything below was run against a **local PostgreSQL 17.11** server (not the Udacity workspace, which was not accessible from here). The full pipeline was run on a brand-new database loaded only from the supplied `StageTableLoad.sql`: `run_all.sql` (schema, ETL, view, procedure, security, CRUD) completed with exit code 0 and no errors. Output below comes from `validation_checks.sql`.
@@ -12,7 +14,7 @@ Everything below was run against a **local PostgreSQL 17.11** server (not the Ud
  distinct Emp_ID = employee rows                     |      199 |      199
  salary rows = staging rows                          |      205 |      205
  salary total matches staging total                  | 22060329 | 22060329
- Toni Lembeck job records                            |        2 |        2
+ one employee's job records (name omitted)            |        2 |        2
  employees with exactly one current job              |      199 |      199
  employees with 2+ current jobs                      |        0 |        0
  orphan assignments (no employee/job/dept)           |        0 |        0
@@ -60,7 +62,7 @@ All 28 table columns, their data types, 7 primary keys and 7 foreign keys in `er
 | Item | Result |
 |---|---|
 | Rows / distinct Emp_ID / distinct emails | 205 / 199 / 199 (the project text says 206 records; that figure counts the Excel header row) |
-| Employees with 2 rows (job history) | 6: Eric Baxter, Melinda Fisher, Abby Lockhart, Edward Eslser, Lori Scatchard, Toni Lembeck |
+| Employees with 2 rows (job history) | 6 (names omitted from this public copy) |
 | Departments / job titles / locations / education levels | 5 / 10 / 5 / 7 |
 | end_dt in year 2100 | 199 rows (one per employee, each a different date, e.g. 2100-01-01, 2100-01-02): treated as placeholder for "current job" and stored as NULL. Only 6 rows have a real end date |
 | Missing values (NULL) | none. Manager text `None` appears once (the President) |

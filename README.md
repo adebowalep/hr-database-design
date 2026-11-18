@@ -111,12 +111,13 @@ docs/       ERDs, security write-up, test results, execution evidence (screensho
 * The synthetic dataset is tiny (9 employees) and exercises the logic, not performance. No performance figures are claimed.
 * Tested locally on PostgreSQL 17.11 (macOS) and in GitHub Actions on PostgreSQL 15, 16 and 17 (Linux, synthetic data). Windows is untested.
 * `NoMgr` has no password; real logins need one. Views use `security_invoker` (PostgreSQL 15+).
-* Course-derived screenshots and outputs in `docs/screenshots` show employee names and one salary from the fictional course dataset; see the provenance note. They predate the security fix and are kept as historical evidence.
-* Screenshots are PNG renderings of real `psql` output, not OS screen captures.
+* Row-level evidence (Q1, Q6, Q7 security test, view and procedure demos) was regenerated from the fictional synthetic dataset and is labelled as such; it replaces earlier outputs from the Udacity course data, whose redistribution rights could not be verified. Counts and totals from the original course run (205 staging rows, 199 employees, 181 passing local tests) are kept as historical figures. Those earlier files remain in the Git history; see the provenance note.
+* Screenshots are PNG renderings of real `psql` output, not OS screen captures. `docs/screenshots/make_synthetic_evidence.py` regenerates them.
+* `docs/screenshots/q2-q5`, `ddl_*` and `c2_procedure_create` are from the original course run and show no employee records (job titles, department counts, code, row counts). The `ddl_*` images predate the non-destructive `schema.sql`.
 
 ## Further documentation
 * [Security defect, fix and before/after results](docs/security/README.md)
 * [Test results](docs/test_results/README.md) and [original validation results](docs/validation_results.md)
 * [Backup, retention and recovery notes](docs/backup_and_retention.md)
 * [Data provenance and privacy review](docs/PROVENANCE_AND_PRIVACY.md)
-* [Presentation slides](docs/presentation/Tech_ABC_Corp_HR_Database.pptx) and [execution evidence](docs/screenshots/)
+* [Presentation slides](docs/presentation/Tech_ABC_Corp_HR_Database.pptx) and [execution evidence](docs/screenshots/README.md)

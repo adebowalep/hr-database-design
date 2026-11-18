@@ -49,7 +49,7 @@ CREATE TABLE education_level (
 -- ---------- Employee (one row per person) ----------
 CREATE TABLE employee (
     employee_id        INTEGER GENERATED ALWAYS AS IDENTITY,
-    employee_number    VARCHAR(8)   NOT NULL,       -- business ID from the spreadsheet, e.g. E27498
+    employee_number    VARCHAR(8)   NOT NULL,       -- business ID from the spreadsheet, e.g. S0004
     full_name          VARCHAR(100) NOT NULL,
     email              VARCHAR(100) NOT NULL,
     hire_date          DATE         NOT NULL,
