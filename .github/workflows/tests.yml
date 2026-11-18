@@ -1,0 +1,86 @@
+name: database-tests
+
+# Builds the database from the synthetic dataset on a throwaway PostgreSQL container and runs the SQL test suite.
+# No secrets are used: the container accepts local connections without a password and exists only for the job.
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  sql-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        postgres: ["15", "16", "17"]
+    services:
+      postgres:
+        image: postgres:${{ matrix.postgres }}
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      PGHOST: localhost
+      PGPORT: "5432"
+      PGUSER: postgres
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check psql client
+        run: |
+          command -v psql || { sudo apt-get update && sudo apt-get install -y postgresql-client; }
+          psql --version
+          psql -d postgres -Atc "select version()"
+
+      - name: Create database, load synthetic staging data, build schema + ETL + security
+        run: |
+          createdb hr_ci
+          psql -d hr_ci -v ON_ERROR_STOP=1 -q -f data/synthetic/synthetic_proj_stg.sql
+          psql -d hr_ci -v ON_ERROR_STOP=1 -q -f sql/run_all.sql
+
+      - name: Run the full test suite (fails the job on any failed assertion)
+        run: psql -d hr_ci -v ON_ERROR_STOP=1 -q -f tests/run_tests.sql
+
+      - name: Negative control - the suite must FAIL when the data or permissions are wrong
+        run: |
+          set -u
+          check_fails () {   # $1 = description, $2 = corrupting SQL
+            dropdb --if-exists hr_ci_neg
+            createdb -T hr_ci hr_ci_neg
+            psql -d hr_ci_neg -v ON_ERROR_STOP=1 -q -c "$2"
+            if psql -d hr_ci_neg -v ON_ERROR_STOP=1 -q -f tests/run_tests.sql > /tmp/neg.txt 2>&1; then
+              echo "::error::tests passed although: $1"; exit 1
+            fi
+            echo "ok - suite failed as expected when: $1"
+          }
+          check_fails "a salary row is missing"   "DELETE FROM employee_salary WHERE salary_id = (SELECT min(salary_id) FROM employee_salary)"
+          check_fails "a salary is altered"       "UPDATE employee_salary SET salary_amount = salary_amount + 1 WHERE salary_id = (SELECT min(salary_id) FROM employee_salary)"
+          check_fails "hr_read can read salary"   "GRANT SELECT ON employee_salary TO hr_read"
+          check_fails "hr_read can read staging"  "GRANT SELECT ON proj_stg TO hr_read"
+          check_fails "a CHECK constraint is missing" "ALTER TABLE job_assignment DROP CONSTRAINT ck_assignment_manager"
+
+      - name: ETL atomicity - a failed ETL leaves the target tables empty
+        run: |
+          createdb hr_ci_etl_atomicity
+          psql -d hr_ci_etl_atomicity -v ON_ERROR_STOP=1 -q -f data/synthetic/synthetic_proj_stg.sql
+          psql -d hr_ci_etl_atomicity -q -f tests/etl_atomicity.sql
+
+      - name: Safe reset and repeatable rebuild
+        run: |
+          # without confirmation nothing is dropped
+          psql -d hr_ci -q -f sql/reset_dev.sql
+          psql -d hr_ci -q -v confirm_reset=some_other_db -f sql/reset_dev.sql
+          test "$(psql -d hr_ci -Atc 'select count(*) from employee')" = "9"
+          # with the right confirmation the HR objects are dropped, then rebuilt and re-tested
+          psql -d hr_ci -v ON_ERROR_STOP=1 -q -v confirm_reset=hr_ci -f sql/reset_dev.sql
+          psql -d hr_ci -v ON_ERROR_STOP=1 -q -f sql/run_all.sql
+          psql -d hr_ci -v ON_ERROR_STOP=1 -q -f tests/run_tests.sql
