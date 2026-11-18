@@ -1,0 +1,8 @@
+.DS_Store
+__pycache__/
+*.pyc
+# Course-provided files (not redistributed): load proj_stg from the workspace's StageTableLoad.sql
+StageTableLoad.sql
+starter-template.pptx
+.env
+*.dump
