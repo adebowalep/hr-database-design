@@ -1,0 +1,214 @@
+-- Question 1: Return a list of employees with their job titles and department names
+SELECT e.employee_number,
+       e.full_name       AS employee_name,
+       j.job_title,
+       d.department_name
+FROM employee e
+JOIN job_assignment a ON a.employee_id = e.employee_id
+                     AND a.end_date IS NULL            -- current job only
+JOIN job            j ON j.job_id        = a.job_id
+JOIN department     d ON d.department_id = a.department_id
+ORDER BY e.full_name;
+ employee_number |     employee_name     |        job_title         |   department_name   
+-----------------+-----------------------+--------------------------+---------------------
+ E14913          | Aaron Gordon          | Network Engineer         | Product Development
+ E91791          | Aaron Richman         | Administrative Assistant | Product Development
+ E16678          | Abby Lockhart         | Database Administrator   | IT
+ E37523          | Alan Mecklet          | Administrative Assistant | Product Development
+ E74490          | Alejandro Scannapieco | Sales Rep                | Sales
+ E55880          | Alex Warring          | Shipping and Receiving   | Distribution
+ E48148          | Alexis Fitzpatrick    | Administrative Assistant | IT
+ E63041          | Allison Gentle        | Manager                  | Distribution
+ E89540          | Amit Hardiya          | Administrative Assistant | Sales
+ E16276          | Analyn Braza          | Sales Rep                | Sales
+ E23429          | Andrew Yoon           | Sales Rep                | Product Development
+ E79552          | Angela Masdary        | Network Engineer         | IT
+ E87822          | Anil Padala           | Software Engineer        | Product Development
+ E18697          | Anita Deluise         | Administrative Assistant | HQ
+ E50012          | Ann Roberto           | Administrative Assistant | IT
+ E79464          | Anu Patel             | Legal Counsel            | HQ
+ E40432          | April Briggs          | Software Engineer        | IT
+ E18659          | Arnold Hanson         | Software Engineer        | Product Development
+ E82137          | Arup Das              | Software Engineer        | IT
+ E35053          | Ashley Bergman        | Administrative Assistant | Distribution
+ E62527          | Barry Walsh           | Network Engineer         | IT
+ E37389          | Becky Weaver          | Sales Rep                | Sales
+ E29129          | Belinda Van Loon      | Sales Rep                | Sales
+ E43694          | Benyam Gizaw          | Legal Counsel            | Sales
+ E30058          | Bertin Dakouo         | Sales Rep                | Product Development
+ E35856          | Beth Sepkowski        | Software Engineer        | IT
+ E25710          | Brent Robinson        | Design Engineer          | Product Development
+ E95199          | Carlos Fernandes      | Sales Rep                | Product Development
+ E51723          | Carlos Lopez          | Administrative Assistant | Distribution
+ E22680          | Cassidy Bancroft      | Sales Rep                | Product Development
+ E56144          | Cassidy Clayton       | Legal Counsel            | Distribution
+ E25144          | Chandi Bhandari       | Software Engineer        | Product Development
+ E93715          | Charles Barker        | Sales Rep                | Sales
+ E61947          | Charles Wirry         | Sales Rep                | Sales
+ E73518          | Cheryl Pike           | Administrative Assistant | Product Development
+ E95190          | Christina Roth        | Shipping and Receiving   | Distribution
+ E47655          | Cody Holland          | Legal Counsel            | IT
+ E11678          | Colleen Alma          | Network Engineer         | Product Development
+ E84122          | Congkhanh Nguyen      | Software Engineer        | IT
+ E77884          | Conner Kinch          | Manager                  | Product Development
+ E49459          | Courtney Newman       | Shipping and Receiving   | Distribution
+ E32058          | Curtis Gibson         | Sales Rep                | Product Development
+ E56444          | Curtis Steward        | Sales Rep                | Sales
+ E66477          | Dakeem Coleman        | Network Engineer         | Product Development
+ E12397          | Daniel Matkovic       | Network Engineer         | Product Development
+ E90407          | Danny Godiksen        | Administrative Assistant | HQ
+ E81502          | Danny Laxton          | Administrative Assistant | IT
+ E76053          | Darryl Reamer         | Legal Counsel            | Product Development
+ E10407          | Darshan Rathod        | Sales Rep                | Product Development
+ E75081          | Dennis Fredrich       | Legal Counsel            | HQ
+ E23590          | Dennis Wooten         | Software Engineer        | IT
+ E42061          | Diana Teppen          | Sales Rep                | Sales
+ E98891          | Doris Venama          | Database Administrator   | IT
+ E25662          | Doug Tomson           | Sales Rep                | Product Development
+ E20848          | Edward Eslser         | Software Engineer        | IT
+ E72436          | Eileen Chuss          | Sales Rep                | Sales
+ E41712          | Elaine Podwika        | Design Engineer          | Product Development
+ E61614          | Elliot Foley          | Sales Rep                | Sales
+ E13160          | Eric Baxter           | Database Administrator   | IT
+ E94387          | Erica Davis           | Sales Rep                | Product Development
+ E44136          | Erica Siegal          | Sales Rep                | Sales
+ E95214          | Faheem Ahmed          | Legal Counsel            | IT
+ E67793          | Fausto Recalde        | Network Engineer         | IT
+ E42522          | Fiona Morris          | Design Engineer          | Product Development
+ E57502          | Frank Debanco         | Sales Rep                | Product Development
+ E87210          | Gary Boyd             | Legal Counsel            | IT
+ E94552          | Geraldine Staler      | Software Engineer        | IT
+ E80744          | Ginger Logan          | Network Engineer         | Product Development
+ E24539          | Grace Messinger       | Sales Rep                | Sales
+ E17372          | Greg Pratt            | Sales Rep                | Sales
+ E49798          | Greg Stirton          | Sales Rep                | Product Development
+ E17469          | Haifa Hajiri          | Administrative Assistant | Distribution
+ E77658          | Hitesh Bhatt          | Design Engineer          | Product Development
+ E34748          | Holly Smith           | Network Engineer         | IT
+ E44426          | Jacob Lauber          | Manager                  | IT
+ E41635          | James Aryeetey        | Design Engineer          | IT
+ E42681          | James Henderson       | Sales Rep                | Product Development
+ E97018          | Jamie Foskett         | Software Engineer        | IT
+ E47926          | Janice Canterbury     | Network Engineer         | Product Development
+ E53406          | Janice Mayzlik        | Legal Counsel            | HQ
+ E90439          | Janice McQueen        | Software Engineer        | IT
+ E59688          | Jason Wingard         | Administrative Assistant | Distribution
+ E98270          | Jeff Barnhill         | Design Engineer          | IT
+ E32359          | Jen Frangias          | Sales Rep                | Sales
+ E88667          | Jennifer De La Garza  | Manager                  | Sales
+ E29652          | Jennifer Westin       | Software Engineer        | Product Development
+ E10033          | Jermaine Massey       | Software Engineer        | Product Development
+ E71792          | Jesse Curiel          | Legal Counsel            | Sales
+ E16346          | Jill Fram             | Administrative Assistant | Product Development
+ E30678          | Jody Hopkins          | Sales Rep                | Product Development
+ E48637          | Joey Fulkerson        | Design Engineer          | Product Development
+ E35075          | John Certa            | Administrative Assistant | HQ
+ E45736          | John Perez            | Legal Counsel            | Distribution
+ E46366          | Johnathan Wayman      | Sales Rep                | Product Development
+ E87219          | Jorge Moscoso         | Administrative Assistant | Sales
+ E25640          | Joseph Donohue        | Administrative Assistant | HQ
+ E14737          | Juan Cosme            | Shipping and Receiving   | Distribution
+ E97273          | Justin Hayes          | Sales Rep                | Product Development
+ E23669          | Karen Brown           | Network Engineer         | Product Development
+ E62634          | Karen Lafler          | Network Engineer         | IT
+ E77317          | Kathy Abiskaroon      | Administrative Assistant | Product Development
+ E34500          | Kathy Fedder          | Design Engineer          | IT
+ E12562          | Keith Ingram          | Administrative Assistant | Product Development
+ E52489          | Kelly Price           | Shipping and Receiving   | Distribution
+ E36960          | Ken Beer              | Network Engineer         | IT
+ E13596          | Kenneth Dewitt        | Sales Rep                | Product Development
+ E81369          | Kevin Soltis          | Network Engineer         | IT
+ E74296          | Krishna Burli         | Administrative Assistant | Product Development
+ E53895          | Kumar Durairaj        | Shipping and Receiving   | Distribution
+ E39652          | Kyle Guilmartin       | Sales Rep                | Product Development
+ E31241          | Laura House           | Sales Rep                | Product Development
+ E83558          | Laura McKenna         | Administrative Assistant | IT
+ E52461          | Lena Thorton          | Sales Rep                | Sales
+ E31931          | Leo Manhanga          | Shipping and Receiving   | Distribution
+ E65052          | Leobrian Mason        | Sales Rep                | Sales
+ E23295          | Lori Scatchard        | Software Engineer        | IT
+ E96966          | Lu Huang              | Software Engineer        | IT
+ E38959          | Ludovic Bocken        | Software Engineer        | Product Development
+ E21696          | Mallory Russo         | Legal Counsel            | Product Development
+ E28638          | Marie Dumadara        | Sales Rep                | Product Development
+ E49025          | Mark Fiore            | Database Administrator   | IT
+ E64920          | Mary Wesson           | Software Engineer        | IT
+ E98559          | Max Yish              | Sales Rep                | Sales
+ E15292          | Melinda Fisher        | Software Engineer        | IT
+ E93734          | Melissa DeMaio        | Sales Rep                | Product Development
+ E91075          | Micah Vass            | Network Engineer         | IT
+ E75344          | Michael Kapper        | Software Engineer        | IT
+ E38677          | Michael Scilla        | Legal Counsel            | Distribution
+ E27909          | Michael Sperduti      | Administrative Assistant | Distribution
+ E60752          | Michael Tholstrup     | Design Engineer          | Product Development
+ E36988          | Michelle Zietz        | Shipping and Receiving   | Distribution
+ E87370          | Misha Tsidulko        | Sales Rep                | Sales
+ E94358          | Muhammed Rubel        | Administrative Assistant | Product Development
+ E67190          | Nathan Hile           | Sales Rep                | Product Development
+ E91182          | Nick Gowen            | Sales Rep                | Product Development
+ E57987          | Nicole Lee            | Administrative Assistant | Product Development
+ E69297          | Nilden Tutalar        | Shipping and Receiving   | Distribution
+ E21348          | Nital Thaker          | Software Engineer        | Product Development
+ E70374          | Norman Guerrero       | Sales Rep                | Sales
+ E22197          | Oliver Jia            | Network Engineer         | IT
+ E55855          | Parker Williams       | Sales Rep                | Sales
+ E64494          | Patricia DuBois       | Software Engineer        | IT
+ E45236          | Patti Hoeg            | Sales Rep                | Sales
+ E37246          | Paulius Mikalainis    | Database Administrator   | IT
+ E54196          | Phil Wisneski         | Sales Rep                | Product Development
+ E86828          | Philip Barnett        | Database Administrator   | IT
+ E45405          | Prashant Sharma       | Shipping and Receiving   | Distribution
+ E27267          | Preston Lilly         | Sales Rep                | Sales
+ E63937          | Rachael Anderson      | Software Engineer        | Product Development
+ E26322          | Raisa Paulson         | Software Engineer        | Product Development
+ E45824          | Raj Prudvi            | Administrative Assistant | IT
+ E78732          | Randy Myers           | Administrative Assistant | HQ
+ E56459          | Raven Landis          | Administrative Assistant | HQ
+ E86238          | Raymond Dorset        | Shipping and Receiving   | Distribution
+ E12890          | Robert Brown          | Software Engineer        | Product Development
+ E38997          | Roseann Clemente      | Sales Rep                | Sales
+ E34816          | Roseann Martineeti    | Sales Rep                | Product Development
+ E90435          | Russell Morales       | Shipping and Receiving   | Distribution
+ E60901          | Samantha Kramer       | Sales Rep                | Sales
+ E87230          | Sara Erwin            | Sales Rep                | Sales
+ E15267          | Shanteel Jackson      | Shipping and Receiving   | Distribution
+ E11920          | Sharon Gillies        | Sales Rep                | Sales
+ E85476          | Shawn Reynolds        | Design Engineer          | Product Development
+ E30317          | Siena Spitzer         | Network Engineer         | Product Development
+ E70603          | Soek Sohn             | Sales Rep                | Sales
+ E63930          | Sonali Baidya         | Sales Rep                | Product Development
+ E48884          | Stacey Lewis          | Network Engineer         | IT
+ E71128          | Stan Frank            | Shipping and Receiving   | Distribution
+ E33486          | Stephen Colluci       | Legal Counsel            | HQ
+ E13085          | Susan Cole            | Shipping and Receiving   | Distribution
+ E88864          | Susan Woodruff        | Sales Rep                | Sales
+ E22785          | Tami Smith            | Sales Rep                | Sales
+ E90990          | Tammy Tieman          | Software Engineer        | IT
+ E60929          | Tanya Maheshwari      | Legal Counsel            | Product Development
+ E85640          | Tara Madison          | Software Engineer        | IT
+ E76443          | Thanuja Polani        | Database Administrator   | IT
+ E26874          | Tiffany Harrington    | Network Engineer         | IT
+ E83512          | Tim Lawler            | Network Engineer         | IT
+ E51619          | Tom Meola             | Design Engineer          | IT
+ E96856          | Tom Wilson            | Legal Counsel            | HQ
+ E27498          | Toni Lembeck          | Database Administrator   | IT
+ E34496          | Tony Hughes           | Administrative Assistant | Sales
+ E93629          | Tracy Emerson         | Legal Counsel            | Sales
+ E93871          | Travis Black          | Sales Rep                | Product Development
+ E28092          | Tuan Yang             | Sales Rep                | Product Development
+ E36346          | Tyrone Curtis         | Sales Rep                | Sales
+ E17054          | Tyrone Hutchison      | President                | HQ
+ E62100          | Victoria Pruitt       | Software Engineer        | Product Development
+ E35860          | Vivian Kovach         | Sales Rep                | Product Development
+ E45758          | Walter Waddler        | Design Engineer          | Product Development
+ E27621          | Wendell Mobley        | Administrative Assistant | Distribution
+ E68807          | Wes Tappan            | Sales Rep                | Sales
+ E99949          | William Graf          | Administrative Assistant | IT
+ E16995          | Wilson Martinez       | Sales Rep                | Product Development
+ E90222          | Yawer Ali             | Sales Rep                | Sales
+ E87073          | Yuesef Hosni          | Sales Rep                | Product Development
+ E38634          | Zach Bratkovich       | Legal Counsel            | HQ
+ E20101          | Zoey Bulter           | Sales Rep                | Sales
+ E24100          | Zondra Peck           | Network Engineer         | IT
+(199 rows)
+

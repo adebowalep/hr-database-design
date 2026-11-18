@@ -1,0 +1,18 @@
+-- Question 5: How many employees are in each department?
+-- Counts CURRENT assignments only, so past jobs of the 6 employees with history are not double-counted.
+SELECT d.department_name,
+       count(DISTINCT a.employee_id) AS employee_count
+FROM department d
+LEFT JOIN job_assignment a ON a.department_id = d.department_id
+                          AND a.end_date IS NULL
+GROUP BY d.department_name
+ORDER BY d.department_name;
+   department_name   | employee_count 
+---------------------+----------------
+ Distribution        |             25
+ HQ                  |             13
+ IT                  |             52
+ Product Development |             69
+ Sales               |             40
+(5 rows)
+

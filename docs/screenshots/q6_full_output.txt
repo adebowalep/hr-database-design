@@ -1,0 +1,20 @@
+-- Question 6: Current and past jobs of Toni Lembeck
+SELECT e.full_name  AS employee_name,
+       j.job_title,
+       d.department_name,
+       m.full_name  AS manager_name,
+       a.start_date AS job_start_date,
+       COALESCE(a.end_date::text, 'Current') AS job_end_date
+FROM employee e
+JOIN job_assignment a ON a.employee_id   = e.employee_id
+JOIN job            j ON j.job_id        = a.job_id
+JOIN department     d ON d.department_id = a.department_id
+LEFT JOIN employee  m ON m.employee_id   = a.manager_id
+WHERE e.full_name = 'Toni Lembeck'
+ORDER BY a.start_date;
+ employee_name |       job_title        | department_name | manager_name | job_start_date | job_end_date 
+---------------+------------------------+-----------------+--------------+----------------+--------------
+ Toni Lembeck  | Network Engineer       | IT              | Jacob Lauber | 1995-03-12     | 2001-07-18
+ Toni Lembeck  | Database Administrator | IT              | Jacob Lauber | 2001-07-18     | Current
+(2 rows)
+

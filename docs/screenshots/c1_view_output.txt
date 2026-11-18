@@ -1,0 +1,16 @@
+hr=# SELECT emp_id, emp_nm, job_title, department_nm, start_dt, end_dt
+      FROM v_employee_directory ORDER BY emp_id, start_dt LIMIT 10;
+Output format is aligned.
+ emp_id |     emp_nm      |        job_title         |    department_nm    |  start_dt  |   end_dt
+--------+-----------------+--------------------------+---------------------+------------+------------
+ E10033 | Jermaine Massey | Software Engineer        | Product Development | 2016-03-07 | Current
+ E10407 | Darshan Rathod  | Sales Rep                | Product Development | 2018-10-08 | Current
+ E11678 | Colleen Alma    | Network Engineer         | Product Development | 2001-12-26 | Current
+ E11920 | Sharon Gillies  | Sales Rep                | Sales               | 2006-06-19 | Current
+ E12397 | Daniel Matkovic | Network Engineer         | Product Development | 2013-11-17 | Current
+ E12562 | Keith Ingram    | Administrative Assistant | Product Development | 1996-04-14 | Current
+ E12890 | Robert Brown    | Software Engineer        | Product Development | 2010-06-06 | Current
+ E13085 | Susan Cole      | Shipping and Receiving   | Distribution        | 2017-05-01 | Current
+ E13160 | Eric Baxter     | Network Engineer         | Product Development | 2004-07-06 | 2008-10-05
+ E13160 | Eric Baxter     | Database Administrator   | IT                  | 2008-10-06 | Current
+(10 rows)

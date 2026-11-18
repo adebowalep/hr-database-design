@@ -1,0 +1,26 @@
+-- Question 4: Delete the job title 'Web Developer' from the database
+SELECT job_id, job_title FROM job WHERE job_title LIKE 'Web%';   -- BEFORE
+ job_id |   job_title   
+--------+---------------
+     11 | Web Developer
+(1 row)
+
+DELETE FROM job WHERE job_title = 'Web Developer';   -- touches only this job row
+DELETE 1
+SELECT job_id, job_title FROM job WHERE job_title LIKE 'Web%';   -- AFTER: no rows
+ job_id | job_title 
+--------+-----------
+(0 rows)
+
+SELECT count(*) AS total_jobs FROM job;              -- back to the original 10
+ total_jobs 
+------------
+         10
+(1 row)
+
+SELECT count(*) AS employees_unchanged FROM employee;
+ employees_unchanged 
+---------------------
+                 199
+(1 row)
+

@@ -1,0 +1,15 @@
+-- Question 3: Correct the job title from 'Web Programmer' to 'Web Developer'
+SELECT job_id, job_title FROM job WHERE job_title LIKE 'Web%';   -- BEFORE
+ job_id |   job_title    
+--------+----------------
+     11 | Web Programmer
+(1 row)
+
+UPDATE job SET job_title = 'Web Developer' WHERE job_title = 'Web Programmer';
+UPDATE 1
+SELECT job_id, job_title FROM job WHERE job_title LIKE 'Web%';   -- AFTER
+ job_id |   job_title   
+--------+---------------
+     11 | Web Developer
+(1 row)
+

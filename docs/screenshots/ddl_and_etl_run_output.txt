@@ -1,0 +1,64 @@
+DROP TABLE
+DROP TABLE
+DROP TABLE
+DROP TABLE
+DROP TABLE
+DROP TABLE
+DROP TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+              List of relations
+ Schema |      Name       | Type  |  Owner   
+--------+-----------------+-------+----------
+ public | department      | table | postgres
+ public | education_level | table | postgres
+ public | employee        | table | postgres
+ public | employee_salary | table | postgres
+ public | job             | table | postgres
+ public | job_assignment  | table | postgres
+ public | location        | table | postgres
+ public | proj_stg        | table | postgres
+(8 rows)
+
+
+BEGIN
+DO
+INSERT 0 5
+INSERT 0 5
+INSERT 0 10
+INSERT 0 7
+INSERT 0 199
+INSERT 0 205
+INSERT 0 205
+NOTICE:  ETL validation passed: 205 rows -> 205 assignments, 199 employees, 205 salaries
+DO
+COMMIT
+             check_name              | value 
+-------------------------------------+-------
+ proj_stg rows                       |   205
+ proj_stg distinct Emp_ID            |   199
+ employee rows                       |   199
+ job_assignment rows                 |   205
+ employee_salary rows                |   205
+ current assignments (end_date NULL) |   199
+ past assignments                    |     6
+ employees with >1 assignment        |     6
+ job rows                            |    10
+ department rows                     |     5
+ location rows                       |     5
+ education_level rows                |     7
+(12 rows)
+
