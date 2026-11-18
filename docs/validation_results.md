@@ -1,4 +1,6 @@
-# Validation Results - Tech ABC Corp HR Database
+# Validation Results - Tech ABC Corp HR Database (original course dataset)
+
+> **Historical record.** These results were produced before the later hardening work. Section 3 (salary security) used the original grant script, which let the read-only role read `proj_stg`; see [security/README.md](security/README.md). Current automated results are in [test_results/](test_results/README.md). Paths such as `erd/` are now `docs/erd/`, and `validation_checks.sql` is now `sql/validation_checks.sql`.
 
 Everything below was run against a **local PostgreSQL 17.11** server (not the Udacity workspace, which was not accessible from here). The full pipeline was run on a brand-new database loaded only from the supplied `StageTableLoad.sql`: `run_all.sql` (schema, ETL, view, procedure, security, CRUD) completed with exit code 0 and no errors. Output below comes from `validation_checks.sql`.
 

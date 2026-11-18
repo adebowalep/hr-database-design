@@ -1,0 +1,233 @@
+psql:tests/25_etl_preflight.sql:19: NOTICE:  table "_stg_norm" does not exist, skipping
+psql:tests/25_etl_preflight.sql:22: NOTICE:  table "_stg_norm" does not exist, skipping
+psql:tests/25_etl_preflight.sql:24: NOTICE:  table "_stg_norm" does not exist, skipping
+psql:tests/25_etl_preflight.sql:26: NOTICE:  table "_stg_norm" does not exist, skipping
+psql:tests/25_etl_preflight.sql:28: NOTICE:  table "_stg_norm" does not exist, skipping
+psql:tests/25_etl_preflight.sql:30: NOTICE:  table "_stg_norm" does not exist, skipping
+psql:tests/25_etl_preflight.sql:32: NOTICE:  table "_stg_norm" does not exist, skipping
+psql:tests/25_etl_preflight.sql:34: NOTICE:  table "_stg_norm" does not exist, skipping
+psql:tests/25_etl_preflight.sql:36: NOTICE:  table "_stg_norm" does not exist, skipping
+psql:tests/25_etl_preflight.sql:38: NOTICE:  table "_stg_norm" does not exist, skipping
+psql:tests/25_etl_preflight.sql:40: NOTICE:  table "_stg_norm" does not exist, skipping
+psql:tests/25_etl_preflight.sql:42: NOTICE:  table "_stg_norm" does not exist, skipping
+psql:tests/25_etl_preflight.sql:44: NOTICE:  table "_stg_norm" does not exist, skipping
+psql:tests/25_etl_preflight.sql:46: NOTICE:  table "_stg_norm" does not exist, skipping
+psql:tests/25_etl_preflight.sql:48: NOTICE:  table "_stg_norm" does not exist, skipping
+psql:tests/25_etl_preflight.sql:53: NOTICE:  table "_stg_norm" does not exist, skipping
+
+===== Test results =====
+ seq | status |    category    |                                              test_name                                              |                                                                                                                                                                                                                                                                            detail                                                                                                                                                                                                                                                                             
+-----+--------+----------------+-----------------------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   1 | PASS   | security       | NoMgr is a member of hr_read                                                                        | actual=true expected=true
+   2 | PASS   | security       | NoMgr is NOT a member of hr_staff                                                                   | actual=false expected=false
+   3 | PASS   | security       | hr_read is NOT a member of hr_staff                                                                 | actual=false expected=false
+   4 | PASS   | security       | no role other than NoMgr is a member of hr_read                                                     | actual=0 expected=0
+   5 | INFO   | security       | objects exposing salary data                                                                        | employee_salary, proj_stg, v_employee_full_hr
+   6 | PASS   | security       | hr_read cannot SELECT any column of employee_salary                                                 | actual=false expected=false
+   7 | PASS   | security       | NoMgr cannot SELECT any column of employee_salary                                                   | actual=false expected=false
+   8 | PASS   | security       | test_outsider cannot SELECT any column of employee_salary                                           | actual=false expected=false
+   9 | PASS   | security       | public cannot SELECT any column of employee_salary                                                  | actual=false expected=false
+  10 | PASS   | security       | hr_read cannot SELECT any column of proj_stg                                                        | actual=false expected=false
+  11 | PASS   | security       | NoMgr cannot SELECT any column of proj_stg                                                          | actual=false expected=false
+  12 | PASS   | security       | test_outsider cannot SELECT any column of proj_stg                                                  | actual=false expected=false
+  13 | PASS   | security       | public cannot SELECT any column of proj_stg                                                         | actual=false expected=false
+  14 | PASS   | security       | hr_read cannot SELECT any column of v_employee_full_hr                                              | actual=false expected=false
+  15 | PASS   | security       | NoMgr cannot SELECT any column of v_employee_full_hr                                                | actual=false expected=false
+  16 | PASS   | security       | test_outsider cannot SELECT any column of v_employee_full_hr                                        | actual=false expected=false
+  17 | PASS   | security       | public cannot SELECT any column of v_employee_full_hr                                               | actual=false expected=false
+  18 | PASS   | security       | NoMgr can read the employee directory view                                                          | role=NoMgr, rows=205 (min 1)
+  19 | PASS   | security       | NoMgr can read employee                                                                             | role=NoMgr, rows=199 (min 1)
+  20 | PASS   | security       | NoMgr can read job_assignment                                                                       | role=NoMgr, rows=205 (min 1)
+  21 | PASS   | security       | NoMgr can read lookup tables                                                                        | role=NoMgr, rows=1 (min 1)
+  22 | PASS   | security       | NoMgr can execute the job-history procedure                                                         | actual=true expected=true
+  23 | PASS   | security       | NoMgr: SELECT employee_salary                                                                       | role=NoMgr expected SQLSTATE 42501, got 42501
+  24 | PASS   | security       | NoMgr: SELECT salary_amount column only                                                             | role=NoMgr expected SQLSTATE 42501, got 42501
+  25 | PASS   | security       | NoMgr: SELECT v_employee_full_hr                                                                    | role=NoMgr expected SQLSTATE 42501, got 42501
+  26 | PASS   | security       | NoMgr: SELECT salary from staging proj_stg                                                          | role=NoMgr expected SQLSTATE 42501, got 42501
+  27 | PASS   | security       | NoMgr: SELECT * from staging proj_stg                                                               | role=NoMgr expected SQLSTATE 42501, got 42501
+  28 | PASS   | security       | hr_read: SELECT salary from staging proj_stg                                                        | role=hr_read expected SQLSTATE 42501, got 42501
+  29 | PASS   | security       | NoMgr: salary via join to employee_salary                                                           | role=NoMgr expected SQLSTATE 42501, got 42501
+  30 | PASS   | security       | NoMgr: INSERT job                                                                                   | role=NoMgr expected SQLSTATE 42501, got 42501
+  31 | PASS   | security       | NoMgr: UPDATE employee                                                                              | role=NoMgr expected SQLSTATE 42501, got 42501
+  32 | PASS   | security       | NoMgr: DELETE job_assignment                                                                        | role=NoMgr expected SQLSTATE 42501, got 42501
+  33 | PASS   | security       | NoMgr: INSERT employee_salary                                                                       | role=NoMgr expected SQLSTATE 42501, got 42501
+  34 | PASS   | security       | NoMgr: TRUNCATE employee                                                                            | role=NoMgr expected SQLSTATE 42501, got 42501
+  35 | PASS   | security       | NoMgr: DROP TABLE employee                                                                          | role=NoMgr expected SQLSTATE 42501, got 42501
+  36 | PASS   | security       | NoMgr: CREATE TABLE in public                                                                       | role=NoMgr expected SQLSTATE 42501, got 42501
+  37 | PASS   | security       | NoMgr: INSERT into staging                                                                          | role=NoMgr expected SQLSTATE 42501, got 42501
+  38 | PASS   | security       | outsider: SELECT employee_salary                                                                    | role=test_outsider expected SQLSTATE 42501, got 42501
+  39 | PASS   | security       | outsider: SELECT v_employee_full_hr                                                                 | role=test_outsider expected SQLSTATE 42501, got 42501
+  40 | PASS   | security       | outsider: SELECT proj_stg                                                                           | role=test_outsider expected SQLSTATE 42501, got 42501
+  41 | PASS   | security       | outsider: SELECT employee                                                                           | role=test_outsider expected SQLSTATE 42501, got 42501
+  42 | PASS   | security       | outsider: CREATE TABLE in public                                                                    | role=test_outsider expected SQLSTATE 42501, got 42501
+  43 | PASS   | security       | hr_staff can read employee_salary                                                                   | role=hr_staff, rows=205 (min 1)
+  44 | PASS   | security       | hr_staff can read v_employee_full_hr                                                                | role=hr_staff, rows=205 (min 1)
+  45 | PASS   | security       | hr_staff can read the directory view                                                                | role=hr_staff, rows=205 (min 1)
+  46 | PASS   | security       | hr_staff can update a salary                                                                        | role=hr_staff, rows=205 (min 1)
+  47 | PASS   | security       | hr_staff can insert a job                                                                           | role=hr_staff, rows=1 (min 1)
+  48 | PASS   | security       | hr_staff: TRUNCATE employee_salary denied                                                           | role=hr_staff expected SQLSTATE 42501, got 42501
+  49 | PASS   | security       | hr_staff: DROP TABLE denied                                                                         | role=hr_staff expected SQLSTATE 42501, got 42501
+  50 | PASS   | security       | hr_staff: CREATE TABLE denied                                                                       | role=hr_staff expected SQLSTATE 42501, got 42501
+  51 | PASS   | security       | hr_staff: staging table not needed, denied                                                          | role=hr_staff expected SQLSTATE 42501, got 42501
+  52 | PASS   | security       | hr_staff: CREATE ROLE denied                                                                        | role=hr_staff expected SQLSTATE 42501, got 42501
+  53 | PASS   | security       | v_employee_directory uses security_invoker                                                          | actual=true expected=true
+  54 | PASS   | security       | v_employee_full_hr uses security_invoker                                                            | actual=true expected=true
+  55 | PASS   | security       | accidental GRANT on salary view to hr_read still blocked by base-table privileges                   | role=postgres expected SQLSTATE 42501, got 42501
+  56 | PASS   | reconciliation | job_assignment rows = staging rows                                                                  | actual=205 expected=205
+  57 | PASS   | reconciliation | employee rows = distinct staging Emp_ID                                                             | actual=199 expected=199
+  58 | PASS   | reconciliation | employee_salary rows = staging rows                                                                 | actual=205 expected=205
+  59 | PASS   | reconciliation | salary total equals staging salary total                                                            | actual=true expected=true
+  60 | PASS   | reconciliation | each salary is attached to the matching employee and job period (0 mismatches)                      | actual=0 expected=0
+  61 | PASS   | reconciliation | lookup tables: job titles                                                                           | actual=10 expected=10
+  62 | PASS   | reconciliation | lookup tables: departments                                                                          | actual=5 expected=5
+  63 | PASS   | reconciliation | lookup tables: education levels                                                                     | actual=7 expected=7
+  64 | PASS   | reconciliation | lookup tables: locations                                                                            | actual=5 expected=5
+  65 | PASS   | keys           | 7 primary keys exist                                                                                | actual=7 expected=7
+  66 | PASS   | keys           | 7 foreign keys exist                                                                                | actual=7 expected=7
+  67 | PASS   | keys           | all constraints are validated                                                                       | actual=0 expected=0
+  68 | PASS   | keys           | primary key unique and not null: location                                                           | actual=0 expected=0
+  69 | PASS   | keys           | primary key unique and not null: department                                                         | actual=0 expected=0
+  70 | PASS   | keys           | primary key unique and not null: job                                                                | actual=0 expected=0
+  71 | PASS   | keys           | primary key unique and not null: education_level                                                    | actual=0 expected=0
+  72 | PASS   | keys           | primary key unique and not null: employee                                                           | actual=0 expected=0
+  73 | PASS   | keys           | primary key unique and not null: job_assignment                                                     | actual=0 expected=0
+  74 | PASS   | keys           | primary key unique and not null: employee_salary                                                    | actual=0 expected=0
+  75 | PASS   | integrity      | employee -> location: no orphans                                                                    | actual=0 expected=0
+  76 | PASS   | integrity      | employee -> education_level: no orphans                                                             | actual=0 expected=0
+  77 | PASS   | integrity      | job_assignment -> employee: no orphans                                                              | actual=0 expected=0
+  78 | PASS   | integrity      | job_assignment -> job: no orphans                                                                   | actual=0 expected=0
+  79 | PASS   | integrity      | job_assignment -> department: no orphans                                                            | actual=0 expected=0
+  80 | PASS   | integrity      | job_assignment -> manager (employee): no unresolved manager references                              | actual=0 expected=0
+  81 | PASS   | integrity      | employee_salary -> job_assignment: no orphans                                                       | actual=0 expected=0
+  82 | PASS   | integrity      | every job_assignment has exactly one salary                                                         | actual=0 expected=0
+  83 | PASS   | history        | every employee has exactly one current assignment                                                   | actual=0 expected=0
+  84 | PASS   | history        | employees with more than one job record = same count in staging                                     | actual=6 expected=6
+  85 | PASS   | history        | past (closed) assignments = staging rows with a real end date                                       | actual=6 expected=6
+  86 | PASS   | history        | current assignments = staging rows with the placeholder end date                                    | actual=199 expected=199
+  87 | PASS   | history        | no overlapping job periods for one employee (shared boundary day allowed)                           | actual=0 expected=0
+  88 | PASS   | dates          | no assignment ends before it starts                                                                 | actual=0 expected=0
+  89 | PASS   | dates          | no 2099+ placeholder end dates remain in the target                                                 | actual=0 expected=0
+  90 | PASS   | dates          | hire_date is never after the first job start                                                        | actual=0 expected=0
+  91 | PASS   | dates          | no job starts in the future                                                                         | actual=0 expected=0
+  92 | PASS   | hierarchy      | staging rows with a named manager all resolved to an employee                                       | actual=0 expected=0
+  93 | PASS   | hierarchy      | assignments without a manager = staging rows whose manager is None                                  | actual=1 expected=1
+  94 | PASS   | hierarchy      | nobody is their own manager                                                                         | actual=0 expected=0
+  95 | PASS   | hierarchy      | every manager of a current assignment has a current assignment themselves                           | actual=0 expected=0
+  96 | PASS   | hierarchy      | no management cycles among current assignments                                                      | actual=0 expected=0
+  97 | PASS   | quality        | no duplicate employee e-mails                                                                       | actual=0 expected=0
+  98 | PASS   | quality        | no duplicate employee numbers                                                                       | actual=0 expected=0
+  99 | PASS   | quality        | no duplicate employee names (managers are matched by name)                                          | actual=0 expected=0
+ 100 | PASS   | quality        | names have no leading/trailing/double spaces                                                        | actual=0 expected=0
+ 101 | PASS   | quality        | e-mails are lower-case and trimmed                                                                  | actual=0 expected=0
+ 102 | PASS   | quality        | state codes are upper-case                                                                          | actual=0 expected=0
+ 103 | PASS   | quality        | city typo "Minnapolis" is corrected                                                                 | actual=0 expected=0
+ 104 | PASS   | quality        | all salaries are positive                                                                           | actual=0 expected=0
+ 105 | INFO   | data           | row counts                                                                                          | employee=199, job_assignment=205, employee_salary=205, job=10, department=5, location=5, education_level=7, proj_stg=205
+ 106 | PASS   | etl-preflight  | unmodified copy of staging passes the preflight                                                     | role=postgres, rows=0 (min 0)
+ 107 | PASS   | etl-preflight  | EL001 missing required value                                                                        | role=postgres expected SQLSTATE EL001, got EL001
+ 108 | PASS   | etl-preflight  | EL002 same Emp_ID, two names                                                                        | role=postgres expected SQLSTATE EL002, got EL002
+ 109 | PASS   | etl-preflight  | EL003 same Emp_ID, two emails                                                                       | role=postgres expected SQLSTATE EL003, got EL003
+ 110 | PASS   | etl-preflight  | EL004 same Emp_ID, two locations                                                                    | role=postgres expected SQLSTATE EL004, got EL004
+ 111 | PASS   | etl-preflight  | EL005 same Emp_ID, two education levels                                                             | role=postgres expected SQLSTATE EL005, got EL005
+ 112 | PASS   | etl-preflight  | EL006 one e-mail on two Emp_IDs                                                                     | role=postgres expected SQLSTATE EL006, got EL006
+ 113 | PASS   | etl-preflight  | EL007 duplicate (Emp_ID, start date)                                                                | role=postgres expected SQLSTATE EL007, got EL007
+ 114 | PASS   | etl-preflight  | EL008 one name on two Emp_IDs (ambiguous manager lookup)                                            | role=postgres expected SQLSTATE EL008, got EL008
+ 115 | PASS   | etl-preflight  | EL009 manager matches no employee                                                                   | role=postgres expected SQLSTATE EL009, got EL009
+ 116 | PASS   | etl-preflight  | EL010 employee is their own manager                                                                 | role=postgres expected SQLSTATE EL010, got EL010
+ 117 | PASS   | etl-preflight  | EL011 end date before start date                                                                    | role=postgres expected SQLSTATE EL011, got EL011
+ 118 | PASS   | etl-preflight  | EL012 two current (placeholder end date) rows for one employee                                      | role=postgres expected SQLSTATE EL012, got EL012
+ 119 | PASS   | etl-preflight  | EL013 overlapping job periods                                                                       | role=postgres expected SQLSTATE EL013, got EL013
+ 120 | PASS   | etl-preflight  | EL014 salary not positive                                                                           | role=postgres expected SQLSTATE EL014, got EL014
+ 121 | PASS   | etl-preflight  | EL015 management cycle (top manager reports to own subordinate)                                     | role=postgres expected SQLSTATE EL015, got EL015
+ 122 | PASS   | constraints    | orphan job_assignment (unknown employee) rejected                                                   | role=postgres expected SQLSTATE 23503, got 23503
+ 123 | PASS   | constraints    | job_assignment with unknown job rejected                                                            | role=postgres expected SQLSTATE 23503, got 23503
+ 124 | PASS   | constraints    | job_assignment with unknown manager rejected                                                        | role=postgres expected SQLSTATE 23503, got 23503
+ 125 | PASS   | constraints    | salary for a non-existent assignment rejected                                                       | role=postgres expected SQLSTATE 23503, got 23503
+ 126 | PASS   | constraints    | employee with unknown location rejected                                                             | role=postgres expected SQLSTATE 23503, got 23503
+ 127 | PASS   | constraints    | deleting a referenced department rejected                                                           | role=postgres expected SQLSTATE 23503, got 23503
+ 128 | PASS   | constraints    | deleting a referenced job rejected                                                                  | role=postgres expected SQLSTATE 23503, got 23503
+ 129 | PASS   | constraints    | deleting a referenced location rejected                                                             | role=postgres expected SQLSTATE 23503, got 23503
+ 130 | PASS   | constraints    | deleting a referenced education level rejected                                                      | role=postgres expected SQLSTATE 23503, got 23503
+ 131 | PASS   | constraints    | deleting an employee who has job history rejected                                                   | role=postgres expected SQLSTATE 23503, got 23503
+ 132 | PASS   | constraints    | deleting an employee who is someone's manager rejected                                              | role=postgres expected SQLSTATE 23503, got 23503
+ 133 | PASS   | constraints    | deleting a job_assignment that has a salary rejected                                                | role=postgres expected SQLSTATE 23503, got 23503
+ 134 | PASS   | constraints    | duplicate employee_number rejected                                                                  | role=postgres expected SQLSTATE 23505, got 23505
+ 135 | PASS   | constraints    | duplicate employee e-mail rejected                                                                  | role=postgres expected SQLSTATE 23505, got 23505
+ 136 | PASS   | constraints    | duplicate job title rejected                                                                        | role=postgres expected SQLSTATE 23505, got 23505
+ 137 | PASS   | constraints    | duplicate department name rejected                                                                  | role=postgres expected SQLSTATE 23505, got 23505
+ 138 | PASS   | constraints    | duplicate location name rejected                                                                    | role=postgres expected SQLSTATE 23505, got 23505
+ 139 | PASS   | constraints    | duplicate (employee, start_date) rejected                                                           | role=postgres expected SQLSTATE 23505, got 23505
+ 140 | PASS   | constraints    | second salary for one assignment rejected                                                           | role=postgres expected SQLSTATE 23505, got 23505
+ 141 | PASS   | constraints    | second CURRENT assignment for one employee rejected                                                 | role=postgres expected SQLSTATE 23505, got 23505
+ 142 | PASS   | constraints    | negative salary rejected                                                                            | role=postgres expected SQLSTATE 23514, got 23514
+ 143 | PASS   | constraints    | zero salary rejected                                                                                | role=postgres expected SQLSTATE 23514, got 23514
+ 144 | PASS   | constraints    | employee as their own manager rejected                                                              | role=postgres expected SQLSTATE 23514, got 23514
+ 145 | PASS   | constraints    | assignment ending before it starts rejected                                                         | role=postgres expected SQLSTATE 23514, got 23514
+ 146 | PASS   | constraints    | employee without a name rejected                                                                    | role=postgres expected SQLSTATE 23502, got 23502
+ 147 | PASS   | constraints    | job_assignment without a start date rejected                                                        | role=postgres expected SQLSTATE 23502, got 23502
+ 148 | PASS   | constraints    | salary beyond NUMERIC(10,2) rejected                                                                | role=postgres expected SQLSTATE 22003, got 22003
+ 149 | PASS   | constraints    | valid closed historical assignment is accepted                                                      | role=postgres, rows=1 (min 1)
+ 150 | PASS   | constraints    | row counts unchanged after all constraint tests                                                     | actual=0 expected=0
+ 151 | PASS   | erd            | physical ERD columns and types match table department                                               | actual=department_id integer, department_name character varying(50)
+ 152 | PASS   | erd            | physical ERD columns and types match table education_level                                          | actual=education_level_id integer, education_level_name character varying(50)
+ 153 | PASS   | erd            | physical ERD columns and types match table employee                                                 | actual=employee_id integer, employee_number character varying(8), full_name character varying(100), email character varying(100), hire_date date, location_id integer, education_level_id integer
+ 154 | PASS   | erd            | physical ERD columns and types match table employee_salary                                          | actual=salary_id integer, assignment_id integer, salary_amount numeric(10,2)
+ 155 | PASS   | erd            | physical ERD columns and types match table job                                                      | actual=job_id integer, job_title character varying(100)
+ 156 | PASS   | erd            | physical ERD columns and types match table job_assignment                                           | actual=assignment_id integer, employee_id integer, job_id integer, department_id integer, manager_id integer, start_date date, end_date date
+ 157 | PASS   | erd            | physical ERD columns and types match table location                                                 | actual=location_id integer, location_name character varying(50), street_address character varying(100), city character varying(50), state_code character(2)
+ 158 | PASS   | erd            | physical ERD has exactly these 7 tables in public                                                   | actual=department,education_level,employee,employee_salary,job,job_assignment,location expected=department,education_level,employee,employee_salary,job,job_assignment,location
+ 159 | PASS   | erd            | primary keys match the ERD                                                                          | actual=department(department_id) education_level(education_level_id) employee(employee_id) employee_salary(salary_id) job(job_id) job_assignment(assignment_id) location(location_id) expected=department(department_id) education_level(education_level_id) employee(employee_id) employee_salary(salary_id) job(job_id) job_assignment(assignment_id) location(location_id)
+ 160 | PASS   | erd            | foreign keys (child.column -> parent) match the ERD                                                 | actual=employee.education_level_id->education_level employee.location_id->location employee_salary.assignment_id->job_assignment job_assignment.department_id->department job_assignment.employee_id->employee job_assignment.job_id->job job_assignment.manager_id->employee expected=employee.education_level_id->education_level employee.location_id->location employee_salary.assignment_id->job_assignment job_assignment.department_id->department job_assignment.employee_id->employee job_assignment.job_id->job job_assignment.manager_id->employee
+ 161 | PASS   | erd            | all foreign keys are ON DELETE RESTRICT (confdeltype = r)                                           | actual=0 expected=0
+ 162 | PASS   | erd            | salary FK is unique (1:0..1 with job_assignment, as drawn)                                          | actual=1 expected=1
+ 163 | PASS   | queries        | Q1 current-job listing returns one row per employee                                                 | actual=199 expected=199
+ 164 | PASS   | queries        | Q2-Q4 insert / update / delete of a job title restores the original job table                       | role=postgres, rows=0 (min 0)
+ 165 | PASS   | queries        | Q5 department headcounts add up to the number of employees                                          | actual=199 expected=199
+ 166 | PASS   | views          | v_employee_directory has one row per job record                                                     | actual=205 expected=205
+ 167 | PASS   | views          | v_employee_full_hr has one row per job record (every record has a salary)                           | actual=205 expected=205
+ 168 | PASS   | views          | v_employee_directory exposes no salary column                                                       | actual=0 expected=0
+ 169 | PASS   | views          | v_employee_full_hr salary equals employee_salary (0 mismatches)                                     | actual=0 expected=0
+ 170 | PASS   | procedure      | sp_employee_job_history returns the right number of rows for every employee (mismatching employees) | actual=0 expected=0
+ 171 | PASS   | procedure      | sp_employee_job_history rows over all employees = job_assignment rows                               | actual=205 expected=205
+ 172 | INFO   | dataset        | dataset detected                                                                                    | ORIGINAL course dataset (local run; data is not in this repository)
+ 173 | PASS   | original       | staging rows = 205                                                                                  | actual=205 expected=205
+ 174 | PASS   | original       | employees = 199                                                                                     | actual=199 expected=199
+ 175 | PASS   | original       | job_assignments = 205                                                                               | actual=205 expected=205
+ 176 | PASS   | original       | salary rows = 205                                                                                   | actual=205 expected=205
+ 177 | PASS   | original       | salary total = 22,060,329                                                                           | actual=22060329 expected=22060329
+ 178 | PASS   | original       | jobs / departments / locations / education levels = 10 / 5 / 5 / 7                                  | actual=10/5/5/7 expected=10/5/5/7
+ 179 | PASS   | original       | 6 employees have job history                                                                        | actual=6 expected=6
+ 180 | PASS   | original       | employees with history are the 6 documented people                                                  | actual=Abby Lockhart, Edward Eslser, Eric Baxter, Lori Scatchard, Melinda Fisher, Toni Lembeck expected=Abby Lockhart, Edward Eslser, Eric Baxter, Lori Scatchard, Melinda Fisher, Toni Lembeck
+ 181 | PASS   | original       | Toni Lembeck: 2 records, Network Engineer then Database Administrator (current)                     | actual=Network Engineer > Database Administrator (current) expected=Network Engineer > Database Administrator (current)
+ 182 | PASS   | original       | exactly one assignment has no manager (the President)                                               | actual=1 expected=1
+ 183 | PASS   | original       | 199 placeholder 2100 end dates became current assignments                                           | actual=199 expected=199
+ 184 | PASS   | original       | salary range 26,050 - 540,000                                                                       | actual=26050-540000 expected=26050-540000
+(184 rows)
+
+===== Summary =====
+    category    | passed | failed | info 
+----------------+--------+--------+------
+ constraints    |     29 |      0 |    0
+ data           |      0 |      0 |    1
+ dataset        |      0 |      0 |    1
+ dates          |      4 |      0 |    0
+ erd            |     12 |      0 |    0
+ etl-preflight  |     16 |      0 |    0
+ hierarchy      |      5 |      0 |    0
+ history        |      5 |      0 |    0
+ integrity      |      8 |      0 |    0
+ keys           |     10 |      0 |    0
+ original       |     12 |      0 |    0
+ procedure      |      2 |      0 |    0
+ quality        |      8 |      0 |    0
+ queries        |      3 |      0 |    0
+ reconciliation |      9 |      0 |    0
+ security       |     54 |      0 |    1
+ views          |      4 |      0 |    0
+(17 rows)
+
+ passed | failed | info_only 
+--------+--------+-----------
+    181 |      0 |         3
+(1 row)
+

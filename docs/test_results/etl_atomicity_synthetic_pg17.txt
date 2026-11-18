@@ -1,0 +1,23 @@
+--- running the ETL; the next ERROR (numeric field overflow) is EXPECTED ---
+psql:sql/etl_from_proj_stg.sql:29: NOTICE:  schema "pg_temp" does not exist, skipping
+psql:sql/etl_from_proj_stg.sql:86: ERROR:  numeric field overflow
+DETAIL:  A field with precision 10, scale 2 must round to an absolute value less than 10^8.
+psql:sql/etl_from_proj_stg.sql:105: ERROR:  current transaction is aborted, commands ignored until end of transaction block
+             check_name              | value 
+-------------------------------------+-------
+ proj_stg rows                       |    11
+ proj_stg distinct Emp_ID            |     9
+ employee rows                       |     0
+ job_assignment rows                 |     0
+ employee_salary rows                |     0
+ current assignments (end_date NULL) |     0
+ past assignments                    |     0
+ employees with >1 assignment        |     0
+ job rows                            |     0
+ department rows                     |     0
+ location rows                       |     0
+ education_level rows                |     0
+(12 rows)
+
+rows left in target tables after the failed ETL: 0
+PASS: the failed ETL left the target tables empty
