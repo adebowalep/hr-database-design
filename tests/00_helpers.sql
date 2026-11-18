@@ -5,6 +5,7 @@
 --
 --   test_results            temp table collecting PASS / FAIL / INFO rows
 --   CALL pg_temp.assert_eq       actual must equal expected (literal values)
+--   CALL pg_temp.assert_queries  two queries returning one value each must agree
 --   CALL pg_temp.assert_sql      a query returning one value must equal the expected text
 --   CALL pg_temp.expect_sqlstate statement (optionally run as a role) must fail with a given SQLSTATE
 --   CALL pg_temp.expect_success  statement (optionally run as a role) must succeed and return >= N rows
@@ -46,6 +47,17 @@ BEGIN
     EXECUTE p_query INTO got;
     PERFORM pg_temp.record(p_cat, p_name, got IS NOT DISTINCT FROM p_expected,
                            'actual=' || coalesce(got, 'NULL') || ' expected=' || coalesce(p_expected, 'NULL'));
+END $$;
+
+-- Compare the single values returned by two queries (e.g. a target-table count vs a staging count).
+CREATE PROCEDURE pg_temp.assert_queries(p_cat text, p_name text, p_actual_query text, p_expected_query text)
+LANGUAGE plpgsql AS $$
+DECLARE a text; e text;
+BEGIN
+    EXECUTE p_actual_query INTO a;
+    EXECUTE p_expected_query INTO e;
+    PERFORM pg_temp.record(p_cat, p_name, a IS NOT DISTINCT FROM e,
+                           'actual=' || coalesce(a, 'NULL') || ' expected=' || coalesce(e, 'NULL'));
 END $$;
 
 -- The statement must fail with exactly p_sqlstate. p_role NULL = run as the session user.

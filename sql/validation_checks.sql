@@ -1,4 +1,8 @@
--- Validation checks (run after run_all.sql). Expected result is shown in the 'expected' column.
+-- DIAGNOSTIC REPORT for the original course dataset (this produced docs/validation_results.md).
+-- It prints actual vs expected but does NOT fail automatically. The automated, failing-on-error checks
+-- are in tests/ (run tests/run_tests.sql). Several figures below (Toni Lembeck, 2100 dates, 1 President) are
+-- specific to the course data, so this report is not meaningful on the synthetic dataset.
+-- Run after run_all.sql. Expected result is shown in the 'expected' column.
 \pset pager off
 SELECT 'staging rows = job_assignment rows' AS check_name, (SELECT count(*) FROM proj_stg) AS actual, (SELECT count(*) FROM job_assignment) AS expected
 UNION ALL SELECT 'distinct Emp_ID = employee rows', (SELECT count(DISTINCT emp_id) FROM proj_stg), (SELECT count(*) FROM employee)
@@ -26,6 +30,7 @@ BEGIN; INSERT INTO employee_salary (assignment_id, salary_amount) VALUES (1, -5)
 -- Table security: who can read salary?
 SELECT r.rolname,
        has_table_privilege(r.rolname, 'employee_salary', 'SELECT') AS can_read_salary,
+       has_table_privilege(r.rolname, 'proj_stg', 'SELECT')        AS can_read_staging,
        has_table_privilege(r.rolname, 'job', 'SELECT')             AS can_read_other_tables,
        has_table_privilege(r.rolname, 'job', 'INSERT')             AS can_write
 FROM pg_roles r WHERE r.rolname IN ('NoMgr','hr_read','hr_staff') ORDER BY 1;
