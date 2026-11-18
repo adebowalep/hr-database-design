@@ -43,7 +43,7 @@ view, procedure  + role-based access (hr_read / hr_staff)
 ## Physical database diagram
 ![Physical ERD](docs/erd/physical_erd.png)
 
-The conceptual and logical ERDs are in [docs/erd/](docs/erd/) with editable `.drawio` sources. The generator is `docs/erd/generate_erds.py` (needs Pillow); `tests/35_schema_matches_erd.sql` checks that the live schema matches the physical diagram's tables, columns, types, keys and foreign keys.
+The conceptual and logical ERDs are in [docs/erd/](docs/erd/) with editable `.drawio` sources. The generator is `docs/erd/generate_erds.py` (needs Pillow); `tests/35_schema_specification.sql` compares the live schema with a hand-maintained specification of the expected tables, columns, types, keys and foreign keys. It does not read the diagram files: the diagram is generated from its own table list in `generate_erds.py`, and the match between that list, the schema and the `.drawio` file was checked by hand/script during review, not by an automated test.
 
 ## Database design
 | Table | Purpose |
@@ -75,7 +75,7 @@ Roles: `hr_read` (ordinary employees, login `NoMgr` is a member), `hr_staff` (HR
 Covered: the read-only role can read the directory but not `employee_salary`, the salary view or `proj_stg`, and cannot write; an unrelated role gets nothing through `PUBLIC`; the HR role can read salary but cannot truncate, drop or read staging. Every denial asserts SQLSTATE `42501`.
 
 ## Data validation and tests
-`tests/run_tests.sql` runs in one transaction that is always rolled back, so it never changes the database. Categories: reconciliation with staging, keys and integrity, job history, dates, hierarchy, data cleaning, ETL preflight rejections, constraint violations (SQLSTATE asserted), schema vs ERD, queries/views/procedure, security, and dataset-specific expectations.
+`tests/run_tests.sql` runs in one transaction that is always rolled back, so it never changes the database. Categories: reconciliation with staging, keys and integrity, job history, dates, hierarchy, data cleaning, ETL preflight rejections, constraint violations (SQLSTATE asserted), schema specification, queries/views/procedure, security, and dataset-specific expectations.
 
 Latest local results (PostgreSQL 17.11): **synthetic dataset 183 passed, 0 failed; original course dataset 181 passed, 0 failed** (3 informational rows each). The suite was also shown to fail on deliberately corrupted copies. Details, outputs and what was not run: [docs/test_results/](docs/test_results/README.md). `sql/validation_checks.sql` is the older diagnostic report for the course data.
 
