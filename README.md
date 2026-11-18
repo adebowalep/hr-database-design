@@ -1,5 +1,6 @@
 # HR Database Design & Data Migration | PostgreSQL
 
+[![CI](https://img.shields.io/github/actions/workflow/status/adebowalep/hr-database-design/tests.yml?branch=main&style=flat&label=CI)](https://github.com/adebowalep/hr-database-design/actions/workflows/tests.yml)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15%2B-336791?style=flat&logo=postgresql&logoColor=white)
 ![SQL](https://img.shields.io/badge/SQL-DDL%20%2F%20DML-4479A1?style=flat)
 ![PL/pgSQL](https://img.shields.io/badge/PL%2FpgSQL-procedures%20%26%20tests-336791?style=flat)
@@ -78,7 +79,7 @@ Covered: the read-only role can read the directory but not `employee_salary`, th
 
 Latest local results (PostgreSQL 17.11): **synthetic dataset 183 passed, 0 failed; original course dataset 181 passed, 0 failed** (3 informational rows each). The suite was also shown to fail on deliberately corrupted copies. Details, outputs and what was not run: [docs/test_results/](docs/test_results/README.md). `sql/validation_checks.sql` is the older diagnostic report for the course data.
 
-CI: [`.github/workflows/tests.yml`](.github/workflows/tests.yml) runs the same steps on PostgreSQL 15, 16 and 17. **It is configured but has not yet been run on GitHub, so it is unverified** and has no status badge.
+CI: [`.github/workflows/tests.yml`](.github/workflows/tests.yml) builds the database from the **synthetic dataset** and runs the suite on GitHub-hosted Linux runners with PostgreSQL 15, 16 and 17. It also runs the negative controls (the suite must fail on corrupted copies), the ETL atomicity test and the guarded reset-and-rebuild. First verified run (commit `67e0cc8`, 2026-11-18): all three jobs succeeded, see [run 44324800766](https://github.com/adebowalep/hr-database-design/actions/runs/44324800766). The badge above shows the current status of the latest run on `main`. The original course dataset is not available to CI and was tested locally only.
 
 ## Reproduce it
 Requires PostgreSQL 15+ and `psql` 13+ (a superuser, because the security script creates roles). Run from the repository root; paths work on macOS, Linux and Windows (Git Bash / PowerShell).
@@ -108,7 +109,7 @@ docs/       ERDs, security write-up, test results, execution evidence (screensho
 ## Limitations
 * Educational design; not deployed anywhere and not a production HR system. Backups, retention and disaster recovery are described, not configured.
 * The synthetic dataset is tiny (9 employees) and exercises the logic, not performance. No performance figures are claimed.
-* Verified on PostgreSQL 17.11 on macOS only. PostgreSQL 15/16, Windows and the GitHub Actions run are untested.
+* Tested locally on PostgreSQL 17.11 (macOS) and in GitHub Actions on PostgreSQL 15, 16 and 17 (Linux, synthetic data). Windows is untested.
 * `NoMgr` has no password; real logins need one. Views use `security_invoker` (PostgreSQL 15+).
 * Course-derived screenshots and outputs in `docs/screenshots` show employee names and one salary from the fictional course dataset; see the provenance note. They predate the security fix and are kept as historical evidence.
 * Screenshots are PNG renderings of real `psql` output, not OS screen captures.
