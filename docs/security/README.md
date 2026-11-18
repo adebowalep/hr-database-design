@@ -14,10 +14,11 @@ read-only login `NoMgr` (member of `hr_read`), reproduced on the local PostgreSQ
 with the course data:
 
 ```
-SELECT emp_id, salary FROM public.proj_stg LIMIT 3;     -> E17469 47418 / E27621 28969 / E27909 43778
-SELECT count(*), sum(salary) FROM public.proj_stg;      -> 205 rows, 22,060,329 total
+SELECT emp_id, salary FROM public.proj_stg LIMIT 3;     -> 3 rows returned (permission NOT denied)
+SELECT count(*), sum(salary) FROM public.proj_stg;      -> 205 rows, total 22,060,329 (matches employee_salary)
 SELECT salary_amount FROM employee_salary;              -> ERROR: permission denied for table employee_salary
 ```
+(Individual salary values from the course data are deliberately not reproduced here.)
 
 The earlier `validation_checks.sql` only tested `employee_salary`, so it reported the restriction as working.
 
