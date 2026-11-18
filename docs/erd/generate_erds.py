@@ -93,13 +93,13 @@ def build_edges(kind, N):
     E = []
     if kind == "physical":
         e, a = N["employee"], N["job_assignment"]
-        E += [(N["location"].right(0), N["employee"].left(5), "one", "many", "", "h"),
-              (N["education_level"].left(0), N["employee"].right(6), "one", "many", "", "h"),
-              (N["job"].right(0), a.left(2), "one", "many", "", "h"),
-              (N["department"].left(0), a.right(3), "one", "many", "", "h"),
-              (e.bottom(110), a.top(110), "one", "many", "employee_id", "v"),
-              (e.bottom(275), a.top(275), "zero_one", "many", "manager_id (manager)", "v"),
-              (a.bottom(110), N["employee_salary"].top(110), "one", "one", "assignment_id (1:1)", "v")]
+        E += [(N["location"].right(0), N["employee"].left(5), "one", "zero_many", "", "h"),
+              (N["education_level"].left(0), N["employee"].right(6), "one", "zero_many", "", "h"),
+              (N["job"].right(0), a.left(2), "one", "zero_many", "", "h"),
+              (N["department"].left(0), a.right(3), "one", "zero_many", "", "h"),
+              (e.bottom(110), a.top(110), "one", "zero_many", "employee_id", "v"),
+              (e.bottom(275), a.top(275), "zero_one", "zero_many", "manager_id (manager)", "v"),
+              (a.bottom(110), N["employee_salary"].top(110), "one", "zero_one", "assignment_id (unique FK)", "v")]
     else:
         lab = kind == "logical" or True
         e, a = N["Employee"], N["Job Assignment"]
@@ -125,7 +125,6 @@ def draw_marker(d, p, direction, kind, scale=1.0):
             d.line([pt(24, 0), pt(0, off)], fill=LINE, width=w)
         if kind == "many": d.line([pt(30, -11), pt(30, 11)], fill=LINE, width=w)
         else:
-            d.ellipse([pt(37, -7)[0], pt(37, -7)[1], pt(37, 7)[0], pt(37, 7)[1]], fill="white", outline=LINE, width=w)
             cx, cy = pt(37, 0); r = 7 * k
             d.ellipse([cx - r, cy - r, cx + r, cy + r], fill="white", outline=LINE, width=w)
     elif kind == "one":
@@ -202,7 +201,7 @@ def render(kind, N, E, title, subtitle, W, H, outfile):
 def legend(im, d, x, y):
     f = font(FR, 17)
     d.text((x * S, y * S), "Legend", font=font(FB, 18), fill=INK)
-    items = [("one", "exactly one"), ("zero_one", "zero or one"), ("many", "one or many")]
+    items = [("one", "exactly one"), ("zero_one", "zero or one"), ("zero_many", "zero or many")]
     for i, (k, t) in enumerate(items):
         yy = y + 36 + i * 34
         d.line([((x + 10) * S, yy * S), ((x + 110) * S, yy * S)], fill=LINE, width=int(2.4 * S))
@@ -229,7 +228,7 @@ def drawio(kind, N, E, outfile):
             else:
                 txt = escape(f"<b>{r}</b>" if "(PK)" in r else r)
             cells.append(f'<mxCell id="{nid}_r{j}" value="{txt}" style="text;strokeColor=none;fillColor={"#ecedf2" if j % 2 else "#ffffff"};align=left;verticalAlign=middle;spacingLeft=8;html=1;fontSize=13;" vertex="1" parent="{nid}"><mxGeometry y="{n.hh + j * n.rh}" width="{n.w}" height="{n.rh}" as="geometry"/></mxCell>')
-    arrow = {"one": "ERmandOne", "zero_one": "ERzeroToOne", "many": "ERmany", None: "none"}
+    arrow = {"one": "ERmandOne", "zero_one": "ERzeroToOne", "many": "ERmany", "zero_many": "ERzeroToMany", None: "none"}
     names = list(N.keys())
     for k, (p, q, m1, m2, label, orient) in enumerate(E):
         def owner(pt):
@@ -244,7 +243,7 @@ def drawio(kind, N, E, outfile):
 for kind, title, sub, H in [
     ("conceptual", "Tech ABC Corp HR Database - Conceptual ERD", "Main business objects and how they relate (no attributes, no cardinality notation at this level)", 1130),
     ("logical", "Tech ABC Corp HR Database - Logical ERD (3NF)", "Plain-English entities and attributes; salary separated into its own restricted entity", 1150),
-    ("physical", "Tech ABC Corp HR Database - Physical ERD (PostgreSQL)", "Matches schema.sql exactly: data types, PK (bold), FK, crow's foot cardinality", 1150)]:
+    ("physical", "Tech ABC Corp HR Database - Physical ERD (PostgreSQL)", "Matches schema.sql: data types, PK (bold), FK, crow's foot cardinality (minimums as enforced by the schema)", 1150)]:
     N = build_nodes(kind); E = build_edges(kind, N)
     im, d = render(kind, N, E, title, sub, 1590, H, None)
     if kind == "physical": legend(im, d, 30, 960)

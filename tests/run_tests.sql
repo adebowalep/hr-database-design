@@ -13,6 +13,7 @@ BEGIN;
 \ir 20_data_assertions.sql
 \ir 25_etl_preflight.sql
 \ir 30_constraints.sql
+\ir 35_schema_matches_erd.sql
 \ir 40_queries.sql
 \ir 50_dataset_expectations.sql
 \ir 99_report.sql
