@@ -6,25 +6,41 @@ Reviewed 2026-11-18 against the repository contents at that date.
 * **Original dataset**: the `proj_stg` staging table loaded by `StageTableLoad.sql`, supplied by the Udacity Data Architecture course for a fictional company (Tech ABC Corp, e-mail domain `TechCorp.com`). 205 rows, 199 employees. The course file is **not** in this repository and is git-ignored.
 * **Synthetic dataset**: `data/synthetic/synthetic_proj_stg.sql`, written for this repository (9 invented employees, `example.com` addresses, placeholder street names). Nothing was copied from the course file. This is what a clone of the repository uses.
 
-## What I could and could not establish
-* The people appear to be fictional (fictional company, generic corporate domain), but **I cannot verify that from the repository**, and I found no licence text stating that the course dataset may be redistributed. Treat redistribution rights as **unconfirmed**; check the course terms.
-* No usernames, home-directory paths, passwords, tokens or API keys were found in any tracked text file (searched for `/Users/`, user name, `password`, `secret`, `token`, `api key`, e-mail addresses). `NoMgr` is created without a password.
-* The Q1-Q7 and challenge screenshots and the slides were rendered from real psql output (see `docs/validation_results.md`) and contain no paths or credentials.
+## Redistribution rights: could not be verified
+Checked 2026-11-18 (Udacity Terms of Use, "Last Updated: January 16, 2026", https://www.udacity.com/legal/terms-of-use; licence and conduct sections read):
+* Udacity "Educational Content" (the terms list homework and programming assignments and code samples) is licensed under Creative Commons BY-NC-ND **only where the content is specifically marked as under that licence**. I found no such marking on the course dataset, which is not in this repository, so I cannot tell whether it is covered.
+* The terms prohibit copying, reproducing, publishing or distributing course Content other than as expressly allowed, and say course code is for instructional purposes.
+* Nothing in the terms mentions GitHub, public repositories, or publishing project datasets or solutions, either to allow or to forbid it. The terms do not say whether a student's own project solution counts as the student's content or as a derivative of course content.
+* The Udacity educator support article that might address reuse returned HTTP 403 and could not be read. No licence file accompanies `StageTableLoad.sql` or the starter template in the local project folder.
+* Conclusion: **Redistribution permission could not be verified.** I have not assumed permission, and no licence is claimed for the course material. Fictional-looking data does not by itself grant it. Only Udacity can answer definitively (support or the course's project instructions). My earlier suggestion that sharing was "most likely fine" was an assumption and is withdrawn.
 
-## Course-derived content that is already published in this repository
-| Where | What it shows |
+## Other checks
+* No usernames, home-directory paths, passwords, tokens or API keys were found in any tracked text file (searched for `/Users/`, the account name, `password`, `secret`, `token`, `api key`, e-mail addresses). `NoMgr` is created without a password.
+* The people in the course data appear fictional, but that cannot be verified from the repository.
+
+## Course-derived content publicly accessible today (audit of tracked files)
+Names and IDs below are not repeated here; counts come from matching tracked files against the local copy of the course data.
+| File(s) | Course-derived content |
 |---|---|
-| `docs/screenshots/q1_full_output.txt` (+ `q1_crud.png`, slide deck) | names, job titles and departments of all 199 employees (the PNG: first 12) |
-| `docs/screenshots/q7_security_test_output.txt`, `q7_security_test.png`, slide deck | one employee name with one salary value (as `hr_staff`) |
-| `docs/screenshots/c1_view_output.txt`, `c1_view_*.png` | employee ids, names, job titles |
+| `docs/screenshots/q1_full_output.txt` | name, employee ID, job title and department of all 199 employees |
+| `docs/screenshots/q1_crud.png` | the first 12 of those rows (image) |
+| `docs/screenshots/c1_view_output.txt`, `c1_view_select.png` | 10 employees: ID, name, job title, department, start date |
+| `docs/screenshots/q6_full_output.txt`, `q6_crud.png` | one employee's job history, with manager names |
+| `docs/screenshots/q7_security_test_output.txt`, `q7_security_test.png` | two employee names and one employee's salary value |
+| `docs/presentation/Tech_ABC_Corp_HR_Database.pptx` | the screenshot images above on about 20 slides; built on the course's starter template |
 | `docs/validation_results.md` | names of the 6 employees with job history; salary range and total |
-These were left unchanged: they are the authentic execution evidence of the original course submission, and altering or re-drawing them would make them less authentic. This commit adds **no** new course data (the new security write-up reports only counts and totals).
+| `docs/test_results/original_dataset_pg17.txt` | the same 6 names and aggregate figures |
+| `tests/50_dataset_expectations.sql` | the same 6 names, one employee ID, aggregate figures |
+| `sql/crud_queries.sql`, `sql/optional/02_stored_procedure.sql`, `sql/optional/04_security_test.sql`, `sql/validation_checks.sql`, `sql/schema.sql` | one employee's name or ID in comments or the Question 6 query (the course question itself names that employee) |
 
-## Needs your decision (not done without approval)
-These files are already in the pushed Git history, so deleting them from the latest commit would **not** remove them from GitHub. Options, from least to most disruptive:
-1. Accept the risk after confirming the course allows sharing the fictional data (most likely fine for a portfolio piece).
-2. Replace the full 199-name listing and the salary example with redacted versions in a new commit (history still contains the originals).
-3. Rewrite history (for example `git filter-repo`) and force-push. Only with your explicit approval, because it changes every commit hash.
+Not present in tracked files: the course dataset file, any e-mail address from it, any password or token. Aggregate totals and the salary range appear in several documents.
 
-## Evidence that is historical
-`docs/screenshots/q7_*`, `c3_security_code.png`, slides 22-23 and 27 show the **original** security script (`GRANT SELECT ON ALL TABLES` then `REVOKE`), which had the staging-table hole described in `docs/security/README.md`. Those images are kept as the record of what was submitted; the current script is `sql/optional/03_salary_security.sql`.
+## Options (nothing below has been done)
+These files are already in pushed Git history, so deleting or editing them in a new commit does **not** remove them from GitHub.
+* **A. Keep as is.** Only reasonable if Udacity confirms publication is permitted.
+* **B. Replace row-level evidence (recommended if permission stays unconfirmed).** In a new commit, replace the files in the first four rows with equivalents generated by running the same queries on the synthetic dataset (real `psql` output, rendered the same way, labelled synthetic), and rebuild the slide images from them. Keep aggregate historical results (counts, totals) in `validation_results.md`. Replace the 6 names in `docs/validation_results.md`, `docs/test_results/original_dataset_pg17.txt` and `tests/50_dataset_expectations.sql` with employee IDs or counts.
+* **C. Redact** names in the existing outputs and images. Less honest as "evidence", and the PNGs would have to be edited.
+* **History:** to remove the course-derived files from the old commits you would need a history rewrite (for example `git filter-repo`) and a force-push, which changes every commit hash, breaks existing clones and the cited CI run link, and still does not recall copies already fetched or cached. Not done; needs a separate decision.
+
+## Historical evidence note
+`docs/screenshots/q7_*`, `c3_security_code.png` and the slides about Question 7 show the **original** security script, which had the staging-table hole described in `docs/security/README.md`. Kept as the record of what was submitted; the current script is `sql/optional/03_salary_security.sql`.
