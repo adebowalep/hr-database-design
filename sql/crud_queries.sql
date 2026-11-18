@@ -67,11 +67,14 @@ ORDER BY a.start_date;
 
 -- ### Q7
 -- Question 7: Table-level security for salaries (PostgreSQL)
--- Salary lives in its own table (employee_salary), so permissions can be set on that table only:
---   REVOKE ALL ON employee_salary FROM PUBLIC;                 -- nobody gets salary by default
---   GRANT SELECT ON ALL TABLES IN SCHEMA public TO hr_read;    -- every domain user (via a group role) can READ HR data
---   REVOKE ALL ON employee_salary FROM hr_read;                -- ...except the salary table
---   GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO hr_staff;  -- HR/management: read + write incl. salary
+-- Salary lives in its own table (employee_salary), so permissions can be set on that table only.
+-- Use an explicit allow-list rather than "grant everything, then revoke the restricted objects":
+--   REVOKE ALL ON employee_salary, v_employee_full_hr FROM PUBLIC;   -- nobody gets salary by default
+--   GRANT SELECT ON employee, job_assignment, job, department, location, education_level,
+--                   v_employee_directory TO hr_read;                  -- ordinary users: named non-salary objects only
+--   GRANT SELECT, INSERT, UPDATE, DELETE ON <the seven HR tables> TO hr_staff;  -- HR/management: incl. salary
+--   REVOKE ALL ON proj_stg FROM PUBLIC, hr_read, hr_staff;           -- the staging copy also contains salary
 -- Each employee's login role is made a member of hr_read (about 90% of users); HR and management logins are members of hr_staff.
+-- (The original answer granted SELECT ON ALL TABLES to hr_read and revoked the salary table afterwards. That left proj_stg readable.)
 -- Full working script (with a tested NoMgr role): optional/03_salary_security.sql
 -- Q7 evidence (shows the permission being enforced): run optional/03_salary_security.sql

@@ -1,6 +1,9 @@
 -- Challenge 1: human-readable views that rebuild the original spreadsheet layout.
 -- Salary is NOT in the general view; the full-detail view is restricted to HR/management (see 03_salary_security.sql).
-CREATE OR REPLACE VIEW v_employee_directory AS
+-- WITH (security_invoker = true) (PostgreSQL 15+): the view runs with the CALLER's table privileges,
+-- not the owner's. Without it a view reads its base tables as the owner, so a GRANT on the view
+-- alone would bypass table-level security.
+CREATE OR REPLACE VIEW v_employee_directory WITH (security_invoker = true) AS
 SELECT e.employee_number  AS emp_id,
        e.full_name        AS emp_nm,
        e.email,
@@ -24,7 +27,7 @@ JOIN location l         ON l.location_id = e.location_id
 JOIN education_level el ON el.education_level_id = e.education_level_id;
 
 -- Same columns plus salary: ONLY for HR / management
-CREATE OR REPLACE VIEW v_employee_full_hr AS
+CREATE OR REPLACE VIEW v_employee_full_hr WITH (security_invoker = true) AS
 SELECT v.emp_id, v.emp_nm, v.email, v.hire_dt, v.job_title, s.salary_amount AS salary,
        v.department_nm, v.manager, v.start_dt, v.end_dt, v.location, v.address, v.city, v.state, v.education_lvl
 FROM v_employee_directory v

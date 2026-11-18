@@ -1,0 +1,72 @@
+
+===== Test results =====
+ seq | status | category |                                     test_name                                     |                        detail                         
+-----+--------+----------+-----------------------------------------------------------------------------------+-------------------------------------------------------
+   1 | PASS   | security | NoMgr is a member of hr_read                                                      | actual=true expected=true
+   2 | PASS   | security | NoMgr is NOT a member of hr_staff                                                 | actual=false expected=false
+   3 | PASS   | security | hr_read is NOT a member of hr_staff                                               | actual=false expected=false
+   4 | PASS   | security | no role other than NoMgr is a member of hr_read                                   | actual=0 expected=0
+   5 | INFO   | security | objects exposing salary data                                                      | employee_salary, proj_stg, v_employee_full_hr
+   6 | PASS   | security | hr_read cannot SELECT any column of employee_salary                               | actual=false expected=false
+   7 | PASS   | security | NoMgr cannot SELECT any column of employee_salary                                 | actual=false expected=false
+   8 | PASS   | security | test_outsider cannot SELECT any column of employee_salary                         | actual=false expected=false
+   9 | PASS   | security | public cannot SELECT any column of employee_salary                                | actual=false expected=false
+  10 | PASS   | security | hr_read cannot SELECT any column of proj_stg                                      | actual=false expected=false
+  11 | PASS   | security | NoMgr cannot SELECT any column of proj_stg                                        | actual=false expected=false
+  12 | PASS   | security | test_outsider cannot SELECT any column of proj_stg                                | actual=false expected=false
+  13 | PASS   | security | public cannot SELECT any column of proj_stg                                       | actual=false expected=false
+  14 | PASS   | security | hr_read cannot SELECT any column of v_employee_full_hr                            | actual=false expected=false
+  15 | PASS   | security | NoMgr cannot SELECT any column of v_employee_full_hr                              | actual=false expected=false
+  16 | PASS   | security | test_outsider cannot SELECT any column of v_employee_full_hr                      | actual=false expected=false
+  17 | PASS   | security | public cannot SELECT any column of v_employee_full_hr                             | actual=false expected=false
+  18 | PASS   | security | NoMgr can read the employee directory view                                        | role=NoMgr, rows=205 (min 1)
+  19 | PASS   | security | NoMgr can read employee                                                           | role=NoMgr, rows=199 (min 1)
+  20 | PASS   | security | NoMgr can read job_assignment                                                     | role=NoMgr, rows=205 (min 1)
+  21 | PASS   | security | NoMgr can read lookup tables                                                      | role=NoMgr, rows=1 (min 1)
+  22 | PASS   | security | NoMgr can execute the job-history procedure                                       | actual=true expected=true
+  23 | PASS   | security | NoMgr: SELECT employee_salary                                                     | role=NoMgr expected SQLSTATE 42501, got 42501
+  24 | PASS   | security | NoMgr: SELECT salary_amount column only                                           | role=NoMgr expected SQLSTATE 42501, got 42501
+  25 | PASS   | security | NoMgr: SELECT v_employee_full_hr                                                  | role=NoMgr expected SQLSTATE 42501, got 42501
+  26 | PASS   | security | NoMgr: SELECT salary from staging proj_stg                                        | role=NoMgr expected SQLSTATE 42501, got 42501
+  27 | PASS   | security | NoMgr: SELECT * from staging proj_stg                                             | role=NoMgr expected SQLSTATE 42501, got 42501
+  28 | PASS   | security | hr_read: SELECT salary from staging proj_stg                                      | role=hr_read expected SQLSTATE 42501, got 42501
+  29 | PASS   | security | NoMgr: salary via join to employee_salary                                         | role=NoMgr expected SQLSTATE 42501, got 42501
+  30 | PASS   | security | NoMgr: INSERT job                                                                 | role=NoMgr expected SQLSTATE 42501, got 42501
+  31 | PASS   | security | NoMgr: UPDATE employee                                                            | role=NoMgr expected SQLSTATE 42501, got 42501
+  32 | PASS   | security | NoMgr: DELETE job_assignment                                                      | role=NoMgr expected SQLSTATE 42501, got 42501
+  33 | PASS   | security | NoMgr: INSERT employee_salary                                                     | role=NoMgr expected SQLSTATE 42501, got 42501
+  34 | PASS   | security | NoMgr: TRUNCATE employee                                                          | role=NoMgr expected SQLSTATE 42501, got 42501
+  35 | PASS   | security | NoMgr: DROP TABLE employee                                                        | role=NoMgr expected SQLSTATE 42501, got 42501
+  36 | PASS   | security | NoMgr: CREATE TABLE in public                                                     | role=NoMgr expected SQLSTATE 42501, got 42501
+  37 | PASS   | security | NoMgr: INSERT into staging                                                        | role=NoMgr expected SQLSTATE 42501, got 42501
+  38 | PASS   | security | outsider: SELECT employee_salary                                                  | role=test_outsider expected SQLSTATE 42501, got 42501
+  39 | PASS   | security | outsider: SELECT v_employee_full_hr                                               | role=test_outsider expected SQLSTATE 42501, got 42501
+  40 | PASS   | security | outsider: SELECT proj_stg                                                         | role=test_outsider expected SQLSTATE 42501, got 42501
+  41 | PASS   | security | outsider: SELECT employee                                                         | role=test_outsider expected SQLSTATE 42501, got 42501
+  42 | PASS   | security | outsider: CREATE TABLE in public                                                  | role=test_outsider expected SQLSTATE 42501, got 42501
+  43 | PASS   | security | hr_staff can read employee_salary                                                 | role=hr_staff, rows=205 (min 1)
+  44 | PASS   | security | hr_staff can read v_employee_full_hr                                              | role=hr_staff, rows=205 (min 1)
+  45 | PASS   | security | hr_staff can read the directory view                                              | role=hr_staff, rows=205 (min 1)
+  46 | PASS   | security | hr_staff can update a salary                                                      | role=hr_staff, rows=205 (min 1)
+  47 | PASS   | security | hr_staff can insert a job                                                         | role=hr_staff, rows=1 (min 1)
+  48 | PASS   | security | hr_staff: TRUNCATE employee_salary denied                                         | role=hr_staff expected SQLSTATE 42501, got 42501
+  49 | PASS   | security | hr_staff: DROP TABLE denied                                                       | role=hr_staff expected SQLSTATE 42501, got 42501
+  50 | PASS   | security | hr_staff: CREATE TABLE denied                                                     | role=hr_staff expected SQLSTATE 42501, got 42501
+  51 | PASS   | security | hr_staff: staging table not needed, denied                                        | role=hr_staff expected SQLSTATE 42501, got 42501
+  52 | PASS   | security | hr_staff: CREATE ROLE denied                                                      | role=hr_staff expected SQLSTATE 42501, got 42501
+  53 | PASS   | security | v_employee_directory uses security_invoker                                        | actual=true expected=true
+  54 | PASS   | security | v_employee_full_hr uses security_invoker                                          | actual=true expected=true
+  55 | PASS   | security | accidental GRANT on salary view to hr_read still blocked by base-table privileges | role=postgres expected SQLSTATE 42501, got 42501
+(55 rows)
+
+===== Summary =====
+ category | passed | failed | info 
+----------+--------+--------+------
+ security |     54 |      0 |    1
+(1 row)
+
+ passed | failed | info_only 
+--------+--------+-----------
+     54 |      0 |         1
+(1 row)
+
